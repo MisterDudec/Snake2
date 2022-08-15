@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="people">
+        <item>bistrov</item>
+        <item>dima</item>
+        <item>dima2</item>
+        <item>horse</item>
+        <item>katya</item>
+        <item>nastya</item>
+        <item>tsar</item>
+    </string-array>
+
+    <string-array name="peopleKeys">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+
+    <array name="peopleImg">
+        <item>@drawable/bistrov</item>
+        <item>@drawable/dima</item>
+        <item>@drawable/dima2</item>
+        <item>@drawable/horse</item>
+        <item>@drawable/katya</item>
+        <item>@drawable/nastya</item>
+        <item>@drawable/tsar</item>
+    </array>
+</resources>

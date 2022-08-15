@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="mainApp">#c94441</color>
+    <color name="mainAppDark">#ae1d1a</color>
+    <color name="mainAppText">#ffffff</color>
+
+    <color name="emptyCell">#000000</color>
+    <color name="snake">#00ff00</color>
+    <color name="cherry">#ff0d00</color>
+
+    <color name="lessThenZero">#aad440</color>
+    <color name="zero">#ff0300</color>
+    <color name="one">#ff9d00</color>
+    <color name="two">#fbff00</color>
+    <color name="three">#2fff00</color>
+    <color name="four">#00f2ff</color>
+    <color name="five">#f200ff</color>
+    <color name="six">#5100ff</color>
+    <color name="seven">#058405</color>
+    <color name="eight">#aea758</color>
+    <color name="nine">#a93500</color>
+</resources>

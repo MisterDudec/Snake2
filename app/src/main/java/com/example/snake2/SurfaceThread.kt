@@ -1,30 +1,28 @@
 package com.example.snake2
 
-import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.os.Build
 import android.view.SurfaceHolder
 import androidx.annotation.RequiresApi
 
 class SurfaceThread(val surfaceHolder: SurfaceHolder, val surfaceView: GameSurfaceView): Thread() {
-    private var myThreadRun = false
+    private var running = false
 
-    fun setRunning(myThreadRun: Boolean){
-        this.myThreadRun = myThreadRun
+    fun setRunning(running: Boolean){
+        this.running = running
     }
 
-    @SuppressLint("WrongCall")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun run() {
         this.surfaceHolder
-        while (myThreadRun) {
-            var canvas: Canvas? = null
+        var canvas: Canvas? = null
+        while (running) {
             try {
                 canvas = surfaceHolder.lockCanvas(null)
                 synchronized(surfaceHolder) {
-                    surfaceView.onDraw(canvas)
+                    surfaceView.draw(canvas)
                 }
-                sleep(10)
+                sleep(30)
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             } finally {
@@ -32,4 +30,35 @@ class SurfaceThread(val surfaceHolder: SurfaceHolder, val surfaceView: GameSurfa
             }
         }
     }
+
+    /*override fun run() {
+        var canvas: Canvas?
+        while (runFlag) {
+            // получаем текущее время и вычисляем разницу с предыдущим
+            // сохраненным моментом времени
+            val now = System.currentTimeMillis()
+            val elapsedTime: Long = now - prevTime
+            if (elapsedTime > 30) {
+                // если прошло больше 30 миллисекунд - сохраним текущее время
+                // и повернем картинку на 2 градуса.
+                // точка вращения - центр картинки
+                prevTime = now
+                matrix.preRotate(2.0f, picture.getWidth() / 2, picture.getHeight() / 2)
+            }
+            canvas = null
+            try {
+                // получаем объект Canvas и выполняем отрисовку
+                canvas = surfaceHolder.lockCanvas(null)
+                synchronized(surfaceHolder) {
+                    canvas.drawColor(Color.BLACK)
+                    canvas.drawBitmap(picture, matrix, null)
+                }
+            } finally {
+                if (canvas != null) {
+                    // отрисовка выполнена. выводим результат на экран
+                    surfaceHolder.unlockCanvasAndPost(canvas)
+                }
+            }
+        }
+    }*/
 }

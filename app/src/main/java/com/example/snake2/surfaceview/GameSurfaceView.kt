@@ -1,4 +1,4 @@
-package com.example.snake2
+package com.example.snake2.surfaceview
 
 import android.content.Context
 import android.graphics.Canvas

@@ -1,9 +1,10 @@
-package com.example.snake2
+package com.example.snake2.surfaceview
 
 import android.graphics.Canvas
 import android.os.Build
 import android.view.SurfaceHolder
 import androidx.annotation.RequiresApi
+import com.example.snake2.surfaceview.GameSurfaceView
 
 class SurfaceThread(val surfaceHolder: SurfaceHolder, val surfaceView: GameSurfaceView): Thread() {
     private var running = false

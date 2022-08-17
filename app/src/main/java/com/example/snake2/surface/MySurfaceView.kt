@@ -14,6 +14,10 @@ class MySurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
 
+    init {
+        holder.addCallback(this)
+    }
+
     override fun surfaceCreated(holder: SurfaceHolder) { //вызывается, когда surfaceView появляется на экране
         mMyThread = MyThread(getHolder())
         mMyThread!!.setRunning(true)
@@ -35,9 +39,5 @@ class MySurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
                 e.printStackTrace()//не более чем формальность
             }
         }
-    }
-
-    init {
-        holder.addCallback(this)
     }
 }

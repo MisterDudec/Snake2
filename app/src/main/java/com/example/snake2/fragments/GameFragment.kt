@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.snake2.R
 import com.example.snake2.databinding.FragmentGameBinding
-import com.example.snake2.opeGL.OpenGLRenderer
 
 
 /**
@@ -20,7 +19,6 @@ import com.example.snake2.opeGL.OpenGLRenderer
 class GameFragment : Fragment() {
     private var _binding: FragmentGameBinding? = null
     private val binding get() = _binding!!
-    private var renderer: OpenGLRenderer? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentGameBinding.inflate(inflater, container, false)

@@ -4,11 +4,22 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import com.example.snake2.GameFieldData.Companion.SCREEN_HEIGHT
+import com.example.snake2.GameFieldData.Companion.SCREEN_WIDTH
+import com.example.snake2.GameFieldData.Companion.SIZE
 
 class Presenter {
-    val gameFieldData = GameFieldData()
-    val step = 10
+    private val gameFieldData = GameFieldData()
+    private val step = 5
     private val paint: Paint = Paint()
+
+    companion object {
+        const val DIR_TOP = 0
+        const val DIR_RIGHT = 1
+        const val DIR_BOTTOM = 2
+        const val DIR_LEFT = 3
+        var direction = DIR_TOP
+    }
 
     init {
         paint.isAntiAlias = true
@@ -16,7 +27,14 @@ class Presenter {
     }
 
     fun updateGame() {
-        gameFieldData.snake[0].moveRight()
+        with (gameFieldData.snake[0]) {
+            when (direction) {
+                DIR_TOP -> moveTop()
+                DIR_RIGHT -> moveRight()
+                DIR_BOTTOM -> moveBottom()
+                DIR_LEFT -> moveLeft()
+            }
+        }
     }
 
     fun drawFrame(canvas: Canvas) {
@@ -26,24 +44,44 @@ class Presenter {
             canvas.drawRect(gameFieldData.snake[i], paint)
     }
 
-    private fun Rect.moveRight() {
-        this.right += step
-        this.left += step
-    }
-
-    private fun Rect.moveLeft() {
-        this.right -= step
-        this.left -= step
-    }
-
     private fun Rect.moveTop() {
-        this.top -= step
-        this.bottom -= step
+        if (bottom >= 0) {
+            top -= step
+            bottom -= step
+        } else {
+            top = SCREEN_HEIGHT
+            bottom = SCREEN_HEIGHT + SIZE
+        }
+    }
+
+    private fun Rect.moveRight() {
+        if (left <= SCREEN_WIDTH) {
+            right += step
+            left += step
+        } else {
+            left = 0 - SIZE
+            right = 0
+        }
     }
 
     private fun Rect.moveBottom() {
-        this.top += step
-        this.bottom += step
+        if (top <= SCREEN_HEIGHT) {
+            top += step
+            bottom += step
+        } else {
+            top = 0 - SIZE
+            bottom = 0
+        }
+    }
+
+    private fun Rect.moveLeft() {
+        if (right >= 0) {
+            right -= step
+            left -= step
+        } else {
+            left = SCREEN_WIDTH
+            right = SCREEN_WIDTH + SIZE
+        }
     }
 
 }

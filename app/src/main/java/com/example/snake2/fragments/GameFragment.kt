@@ -3,10 +3,12 @@ package com.example.snake2.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.snake2.Presenter
 import com.example.snake2.R
 import com.example.snake2.databinding.FragmentGameBinding
 
@@ -20,7 +22,7 @@ class GameFragment : Fragment() {
     private var _binding: FragmentGameBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -29,12 +31,19 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSecond.setOnClickListener {
+        /*binding.buttonSecond.setOnClickListener {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-        }
+        }*/
+
+        binding.topButton.setOnClickListener { Presenter.direction = Presenter.DIR_TOP }
+        binding.rightButton.setOnClickListener { Presenter.direction = Presenter.DIR_RIGHT }
+        binding.bottomButton.setOnClickListener { Presenter.direction = Presenter.DIR_BOTTOM }
+        binding.leftButton.setOnClickListener { Presenter.direction = Presenter.DIR_LEFT }
+
 
         /*binding.surfaceView.*/
     }
+
 
     /*private fun startOpenGL(view: View) {
         binding.surfaceView.setEGLContextClientVersion(2)
@@ -59,9 +68,5 @@ class GameFragment : Fragment() {
         //binding.surfaceView.onResume()
     }
 
-    /*private fun supportES2(): Boolean {
-        val activityManager = getSystemService<Any>(Context.ACTIVITY_SERVICE) as ActivityManager?
-        val configurationInfo: ConfigurationInfo = activityManager!!.deviceConfigurationInfo
-        return configurationInfo.reqGlEsVersion >= 0x20000
-    }*/
+
 }

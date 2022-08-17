@@ -2,8 +2,10 @@ package com.example.snake2
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.navigation.findNavController
@@ -68,8 +70,35 @@ class MainActivity : AppCompatActivity() {
                 || super.onSupportNavigateUp()
     }
 
-/*
-    override fun onPause() {
+    /*override fun onTouchEvent(event: MotionEvent): Boolean {
+
+        return when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> {
+                Log.d(DEBUG_TAG, "Action was DOWN")
+                true
+            }
+            MotionEvent.ACTION_MOVE -> {
+                event.
+                Log.d(DEBUG_TAG, "Action was MOVE")
+                true
+            }
+            MotionEvent.ACTION_UP -> {
+                Log.d(DEBUG_TAG, "Action was UP")
+                true
+            }
+            MotionEvent.ACTION_CANCEL -> {
+                Log.d(DEBUG_TAG, "Action was CANCEL")
+                true
+            }
+            MotionEvent.ACTION_OUTSIDE -> {
+                Log.d(DEBUG_TAG, "Movement occurred outside bounds of current screen element")
+                true
+            }
+            else -> super.onTouchEvent(event)
+        }
+    }*/
+
+    /*override fun onPause() {
         super.onPause()
         // Запоминаем данные
         val editor = mainSettings!!.edit()

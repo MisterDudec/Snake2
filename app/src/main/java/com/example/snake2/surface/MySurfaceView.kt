@@ -1,14 +1,21 @@
 package com.example.snake2.surface
 
 import android.content.Context
+import android.graphics.Canvas
 import android.util.AttributeSet
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.core.view.GestureDetectorCompat
+import com.example.snake2.GameFieldData
+import com.example.snake2.MyGestureListener
 
 
 class MySurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     SurfaceView(context, attrs, defStyle), SurfaceHolder.Callback {
     private var mMyThread: MyThread? = null
+    private val gestureListener = GestureDetectorCompat(this.context, MyGestureListener())
 
     constructor(context: Context) : this(context, null, 0)
 
@@ -19,12 +26,14 @@ class MySurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) { //вызывается, когда surfaceView появляется на экране
+        setDimensions()
         mMyThread = MyThread(getHolder())
         mMyThread!!.setRunning(true)
         mMyThread!!.start() //запускает процесс в отдельном потоке
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+        setDimensions()
         //когда view меняет свой размер
     }
 
@@ -39,5 +48,32 @@ class MySurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
                 e.printStackTrace()//не более чем формальность
             }
         }
+    }
+
+    fun setDimensions () {
+        var canvas: Canvas? = null
+        try {
+            canvas = holder.lockCanvas() //получаем canvas
+            synchronized(holder) {
+                GameFieldData.SCREEN_WIDTH = canvas.width
+                GameFieldData.SCREEN_HEIGHT = canvas.height
+            }
+        } catch (e: NullPointerException) {
+            e.printStackTrace() //если canvas не доступен
+        } finally {
+            if (canvas != null) holder.unlockCanvasAndPost(canvas) //освобождаем canvas
+        }
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        gestureListener.onTouchEvent(event)
+        performClick()
+        return super.onTouchEvent(event)
+    }
+
+    override fun performClick(): Boolean {
+        super.performClick()
+        //doSomething()
+        return true
     }
 }

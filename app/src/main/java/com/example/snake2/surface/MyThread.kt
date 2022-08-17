@@ -1,43 +1,28 @@
 package com.example.snake2.surface
 
-import android.animation.ArgbEvaluator
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
 import android.os.SystemClock
 import android.util.Log
 import android.view.SurfaceHolder
+import com.example.snake2.GameFieldData
 import com.example.snake2.Presenter
-import kotlin.math.min
+
 /**
  * Created by Sex_predator on 27.03.2016.
  */
-class MyThread(private val mSurfaceHolder: SurfaceHolder) : Thread() {
-    //private val redrawTime = 10 //частота обновления экрана - 10 мс
-    private val animationTime = 1500 //анимация - 1,5 сек
-    private var running = false //запущен ли процесс
-    private var startTime: Long = 0 //время начала анимации
-    private var prevRedrawTime: Long = 0 //предыдущее время перерисовки
-    private val argbEvaluator: ArgbEvaluator
-
-    init {
-        argbEvaluator = ArgbEvaluator()
-    }
-
-    fun setRunning(running: Boolean) { //запускает и останавливает процесс
-        this.running = running
-        prevRedrawTime = time
-    }
-
-    private val time: Long get() = System.nanoTime() / 1000000
+class MyThread(private val holder: SurfaceHolder) : Thread() {
+    private var running = false
+    private val maxFrameSkip = 5
+    private val ticksPerSecond = 60
+    private val skipTicks = 1000 / ticksPerSecond
 
     private val getTickCount: Long get() = SystemClock.uptimeMillis()
 
-    private val maxFrameSkip = 5;
-    private val ticksPerSecond = 60;
-    private val skipTicks = 1000 / ticksPerSecond;
+    fun setRunning(running: Boolean) {
+        this.running = running
+    }
+
 
     override fun run() {
         var canvas: Canvas?
@@ -45,21 +30,21 @@ class MyThread(private val mSurfaceHolder: SurfaceHolder) : Thread() {
         var interpolation: Float
         val presenter = Presenter()
 
-        var drawLoops = 0;
+        var drawLoops = 0
         while (running) {
-            var loops = 0;
+            var loops = 0
             while(getTickCount > nextGameTick && loops < maxFrameSkip) {
-                presenter.updateGame(); //!!!
-                nextGameTick += skipTicks;
+                presenter.updateGame() //!!!
+                nextGameTick += skipTicks
                 Log.d("run", "loops: $loops")
-                loops++;
+                loops++
             }
 
             interpolation = (getTickCount + skipTicks - nextGameTick).toFloat() // float( SKIP_TICKS );
             canvas = null
             try {
-                canvas = mSurfaceHolder.lockCanvas() //получаем canvas
-                synchronized(mSurfaceHolder) {
+                canvas = holder.lockCanvas() //получаем canvas
+                synchronized(holder) {
                     presenter.drawFrame(canvas) //функция рисования //drawFrame(interpolation)
                     Log.d("run", "draw: $drawLoops")
                     drawLoops++
@@ -67,7 +52,7 @@ class MyThread(private val mSurfaceHolder: SurfaceHolder) : Thread() {
             } catch (e: NullPointerException) {
                 e.printStackTrace() //если canvas не доступен
             } finally {
-                if (canvas != null) mSurfaceHolder.unlockCanvasAndPost(canvas) //освобождаем canvas
+                if (canvas != null) holder.unlockCanvasAndPost(canvas) //освобождаем canvas
             }
         }
     }

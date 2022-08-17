@@ -8,9 +8,18 @@ class GameFieldData {
     var width = 20
     var height = 40
 
+    companion object {
+        var SCREEN_WIDTH = -1
+        var SCREEN_HEIGHT = -1
+        const val SIZE = 70
+    }
+
+    val startLeft = SCREEN_WIDTH / 2
+    val startTop = SCREEN_HEIGHT / 2
+
 
     init {
-        val rect = Rect(0,0,100,100)
+        val rect = Rect(startLeft, startTop,startLeft + SIZE,startTop + SIZE)
         snake.add(rect)
     }
 

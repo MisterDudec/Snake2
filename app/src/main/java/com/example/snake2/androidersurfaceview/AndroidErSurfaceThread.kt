@@ -1,12 +1,11 @@
-package com.example.snake2.surfaceview
+package com.example.snake2.androidersurfaceview
 
 import android.graphics.Canvas
 import android.os.Build
 import android.view.SurfaceHolder
 import androidx.annotation.RequiresApi
-import com.example.snake2.surfaceview.GameSurfaceView
 
-class SurfaceThread(val surfaceHolder: SurfaceHolder, val surfaceView: GameSurfaceView): Thread() {
+class AndroidErSurfaceThread(val surfaceHolder: SurfaceHolder, val surfaceView: AndroidErSurfaceView): Thread() {
     private var running = false
 
     fun setRunning(running: Boolean){
@@ -21,7 +20,8 @@ class SurfaceThread(val surfaceHolder: SurfaceHolder, val surfaceView: GameSurfa
             try {
                 canvas = surfaceHolder.lockCanvas(null)
                 synchronized(surfaceHolder) {
-                    surfaceView.draw(canvas)
+                    //surfaceView.draw(canvas)
+                    surfaceView.onDraw(canvas)
                 }
                 sleep(30)
             } catch (e: InterruptedException) {

@@ -1,4 +1,4 @@
-package com.example.snake2.surfaceview
+package com.example.snake2.androidersurfaceview
 
 import android.content.Context
 import android.graphics.Canvas
@@ -11,10 +11,10 @@ import android.view.SurfaceView
 import androidx.annotation.RequiresApi
 
 @RequiresApi(Build.VERSION_CODES.O)
-class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
+class AndroidErSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     SurfaceView(context, attrs, defStyle), SurfaceHolder.Callback {
 
-    private lateinit var thread: SurfaceThread
+    private lateinit var thread: AndroidErSurfaceThread
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     var cx: Float = 0F
     var cy: Float = 0F
@@ -34,7 +34,7 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
-        thread = SurfaceThread(holder, this)
+        thread = AndroidErSurfaceThread(holder, this)
         thread.setRunning(true)
         thread.start()
     }
@@ -44,6 +44,7 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
+
         var retry = true
         thread.setRunning(false)
         while (retry) {
@@ -74,7 +75,7 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     }
 
     override fun draw(canvas: Canvas?) {
-        super.draw(canvas)
+        super.draw(canvas) //java.lang.NullPointerException: Attempt to invoke virtual method 'void android.graphics.Canvas.punchHole(float, float, float, float, float, float)' on a null object reference
         canvas?.drawRGB(30,30,30)
         canvas?.drawCircle(cx, cy, 10F, paint)
 

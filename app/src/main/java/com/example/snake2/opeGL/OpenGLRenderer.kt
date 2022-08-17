@@ -15,9 +15,26 @@ class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
     private var vertexData: FloatBuffer
     private var uColorLocation: Int = -1
     private var aPositionLocation: Int = -1
+    val vertices: FloatArray
+    var did = true
 
     init {
-        val vertices = floatArrayOf(-0.5f, -0.2f, 0.0f, 0.2f, 0.5f, -0.2f)
+        vertices = floatArrayOf(
+            /*-0.9f, 0.8f, -0.9f, 0.2f, -0.5f, 0.8f,
+            -0.6f, 0.2f, -0.2f, 0.2f, -0.2f, 0.8f,
+            0.1f, 0.8f, 0.1f, 0.2f, 0.5f, 0.8f,
+            0.1f, 0.2f, 0.5f, 0.2f, 0.5f, 0.8f*/
+            //0.1f, 0.1f,     0.1f, -0.1f,    -0.1f, -0.1f,    -0.1f, 0.1f
+            0f, 0f,     0f, 0.1f,    0.1f, 0.1f,    0.1f, 0f
+        )
+        /*if (did) {
+            for (i in vertices.indices) {
+                vertices[i] *= 3f
+            }
+        }
+        did = false*/
+        //val vertices = floatArrayOf(-0.5f, -0.2f, 0.0f, 0.2f, 0.5f, -0.2f)
+
         vertexData = ByteBuffer.allocateDirect(vertices.size * 4)
             .order(ByteOrder.nativeOrder())
             .asFloatBuffer()
@@ -48,8 +65,6 @@ class OpenGLRenderer(private val context: Context) : GLSurfaceView.Renderer {
 
     override fun onDrawFrame(arg0: GL10?) {
         glClear(GL_COLOR_BUFFER_BIT)
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices.size / 2);
     }
-
-
 }

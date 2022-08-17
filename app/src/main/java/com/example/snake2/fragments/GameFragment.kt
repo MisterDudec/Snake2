@@ -1,5 +1,6 @@
 package com.example.snake2.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +15,12 @@ import com.example.snake2.opeGL.OpenGLRenderer
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
+
+@SuppressLint("NewApi")
 class GameFragment : Fragment() {
-
     private var _binding: FragmentGameBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    private var renderer: OpenGLRenderer? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
@@ -35,23 +35,30 @@ class GameFragment : Fragment() {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }
 
-        binding.surfaceView.setEGLContextClientVersion(2)
-        binding.surfaceView.setRenderer(OpenGLRenderer(view.context))
+        /*binding.surfaceView.*/
     }
 
+    /*private fun startOpenGL(view: View) {
+        binding.surfaceView.setEGLContextClientVersion(2)
+        renderer = OpenGLRenderer(view.context)
+        binding.surfaceView.setRenderer(renderer)
+    }*/
+
     override fun onDestroyView() {
+        binding.surfaceView.surfaceDestroyed(binding.surfaceView.holder)
         super.onDestroyView()
         _binding = null
     }
 
     override fun onPause() {
+        binding.surfaceView.surfaceDestroyed(binding.surfaceView.holder)
         super.onPause()
-        binding.surfaceView.onPause()
+        //binding.surfaceView.
     }
 
     override fun onResume() {
         super.onResume()
-        binding.surfaceView.onResume()
+        //binding.surfaceView.onResume()
     }
 
     /*private fun supportES2(): Boolean {

@@ -15,7 +15,7 @@
         android:text="@string/previous"
         android:layout_gravity="top|end"/>
 
-    <android.opengl.GLSurfaceView
+    <com.example.snake2.surface.MySurfaceView
         android:id="@+id/surface_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

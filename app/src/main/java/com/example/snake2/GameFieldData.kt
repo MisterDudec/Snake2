@@ -27,6 +27,4 @@ class GameFieldData {
         height *= if (canvas.height > canvas.width) canvas.height / canvas.width
                 else canvas.width / canvas.height
     }
-
-
 }

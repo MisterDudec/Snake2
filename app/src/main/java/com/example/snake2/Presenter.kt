@@ -7,6 +7,7 @@ import android.graphics.Rect
 import com.example.snake2.GameFieldData.Companion.SCREEN_HEIGHT
 import com.example.snake2.GameFieldData.Companion.SCREEN_WIDTH
 import com.example.snake2.GameFieldData.Companion.SIZE
+import java.lang.IndexOutOfBoundsException
 
 class Presenter {
     private val gameFieldData = GameFieldData()
@@ -27,12 +28,18 @@ class Presenter {
     }
 
     fun updateGame() {
-        with (gameFieldData.snake[0]) {
-            when (direction) {
-                DIR_TOP -> moveTop()
-                DIR_RIGHT -> moveRight()
-                DIR_BOTTOM -> moveBottom()
-                DIR_LEFT -> moveLeft()
+        for (i in gameFieldData.snake.indices) {
+            try {
+                with (gameFieldData.snake[i]) {
+                    when (direction) {
+                        DIR_TOP -> moveTop()
+                        DIR_RIGHT -> moveRight()
+                        DIR_BOTTOM -> moveBottom()
+                        DIR_LEFT -> moveLeft()
+                    }
+                }
+            } catch (e: IndexOutOfBoundsException) {
+                e.printStackTrace()
             }
         }
     }
@@ -44,7 +51,24 @@ class Presenter {
             canvas.drawRect(gameFieldData.snake[i], paint)
     }
 
+    private var transition = false
+
     private fun Rect.moveTop() {
+        if (top <= 0 && !transition) {
+            val rect = Rect(left, SCREEN_HEIGHT, right, SCREEN_HEIGHT + SIZE)
+            gameFieldData.snake.add(rect)
+            transition = true
+        }
+        if (bottom >= 0) {
+            top -= step
+            bottom -= step
+        } else {
+            gameFieldData.snake.remove(this)
+            transition = false
+        }
+    }
+
+    /*private fun Rect.moveTop() {
         if (bottom >= 0) {
             top -= step
             bottom -= step
@@ -52,7 +76,7 @@ class Presenter {
             top = SCREEN_HEIGHT
             bottom = SCREEN_HEIGHT + SIZE
         }
-    }
+    }*/
 
     private fun Rect.moveRight() {
         if (left <= SCREEN_WIDTH) {
@@ -82,6 +106,38 @@ class Presenter {
             left = SCREEN_WIDTH
             right = SCREEN_WIDTH + SIZE
         }
+    }
+
+    private fun Rect.move() {
+        var oppositeSide: Int
+        var moveSide: Int
+        var border: Int
+
+        when (direction) {
+            DIR_TOP -> {
+                moveSide = top
+                oppositeSide = bottom
+                border = 0
+            }
+            DIR_RIGHT -> moveRight()
+            DIR_BOTTOM -> moveBottom()
+            DIR_LEFT -> {
+                oppositeSide = right
+                moveSide = left
+                border = SCREEN_WIDTH
+            }
+        }
+
+        if (oppositeSide >= 0) {
+            oppositeSide -= step
+            moveSide -= step
+        } else {
+            moveSide = border
+            oppositeSide = border + SIZE
+        }
+
+        right = oppositeSide
+        left = moveSide
     }
 
 }

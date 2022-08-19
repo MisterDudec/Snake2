@@ -13,7 +13,7 @@ class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
 
     override fun onFling(event1: MotionEvent, event2: MotionEvent,
                          velocityX: Float, velocityY: Float): Boolean {
-        if (velocityX > velocityY) {
+        /*if (velocityX > velocityY) {
             if (event2.x > event1.x) {
                 Presenter.direction = Presenter.DIR_RIGHT
             } else if (event2.x < event1.x) {
@@ -25,7 +25,7 @@ class MyGestureListener : GestureDetector.SimpleOnGestureListener() {
             } else if (event2.y < event1.y) {
                 Presenter.direction = Presenter.DIR_TOP
             }
-        }
+        }*/
         return true
     }
 }

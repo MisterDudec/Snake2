@@ -11,7 +11,7 @@ import com.example.snake2.Presenter
 /**
  * Created by Sex_predator on 27.03.2016.
  */
-class MyThread(private val holder: SurfaceHolder) : Thread() {
+class MyThread(private val holder: SurfaceHolder, private val presenter: Presenter) : Thread() {
     private var running = false
     private val maxFrameSkip = 5
     private val ticksPerSecond = 60
@@ -23,12 +23,10 @@ class MyThread(private val holder: SurfaceHolder) : Thread() {
         this.running = running
     }
 
-
     override fun run() {
         var canvas: Canvas?
         var nextGameTick = getTickCount
         var interpolation: Float
-        val presenter = Presenter()
 
         var drawLoops = 0
         while (running) {

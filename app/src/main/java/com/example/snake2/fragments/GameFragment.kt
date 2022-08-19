@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.snake2.Presenter
@@ -35,21 +36,15 @@ class GameFragment : Fragment() {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }*/
 
-        binding.topButton.setOnClickListener { Presenter.direction = Presenter.DIR_TOP }
-        binding.rightButton.setOnClickListener { Presenter.direction = Presenter.DIR_RIGHT }
-        binding.bottomButton.setOnClickListener { Presenter.direction = Presenter.DIR_BOTTOM }
-        binding.leftButton.setOnClickListener { Presenter.direction = Presenter.DIR_LEFT }
+        //val Button[
+        val presenter = Presenter()
+        binding.surfaceView.startGame(presenter)
 
-
-        /*binding.surfaceView.*/
+        binding.topButton.setOnClickListener { presenter.changeDirection(Presenter.DIR_TOP) }
+        binding.rightButton.setOnClickListener { presenter.changeDirection(Presenter.DIR_RIGHT) }
+        binding.bottomButton.setOnClickListener { presenter.changeDirection(Presenter.DIR_BOTTOM) }
+        binding.leftButton.setOnClickListener { presenter.changeDirection(Presenter.DIR_LEFT) }
     }
-
-
-    /*private fun startOpenGL(view: View) {
-        binding.surfaceView.setEGLContextClientVersion(2)
-        renderer = OpenGLRenderer(view.context)
-        binding.surfaceView.setRenderer(renderer)
-    }*/
 
     override fun onDestroyView() {
         binding.surfaceView.surfaceDestroyed(binding.surfaceView.holder)

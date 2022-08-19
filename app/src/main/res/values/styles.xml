@@ -20,7 +20,7 @@
         <item name="android:layout_marginBottom">8dp</item>
     </style>
 
-    <style name="smallButtons">
+    <style name="controlButtons">
         <item name="android:layout_width">48dp</item>
         <item name="android:layout_height">48dp</item>
         <item name="android:rotation">45</item>

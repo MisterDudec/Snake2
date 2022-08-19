@@ -2,11 +2,12 @@ package com.example.snake2
 
 import android.graphics.Rect
 import com.example.snake2.GameFieldData.Companion.SIZE
+import com.example.snake2.GameFieldData.Companion.STEP
 
 class SnakeBody(val rect: Rect, var direction: Int) {
     var transition = false
     var turning = false
-    var turningProgress = SIZE
+    var turningProgress = SIZE + STEP
 
     fun changeDirection(dir: Int) {
         direction = dir

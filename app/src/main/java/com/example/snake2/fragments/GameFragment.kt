@@ -2,10 +2,8 @@ package com.example.snake2.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -40,11 +38,32 @@ class GameFragment : Fragment() {
         val presenter = Presenter()
         binding.surfaceView.startGame(presenter)
 
-        binding.topButton.setOnClickListener { presenter.changeDirection(Presenter.DIR_TOP) }
-        binding.rightButton.setOnClickListener { presenter.changeDirection(Presenter.DIR_RIGHT) }
-        binding.bottomButton.setOnClickListener { presenter.changeDirection(Presenter.DIR_BOTTOM) }
-        binding.leftButton.setOnClickListener { presenter.changeDirection(Presenter.DIR_LEFT) }
+        setButtons(presenter)
     }
+
+    private fun setButtons(presenter: Presenter) {
+        binding.topButton.setOnClickListener {
+            presenter.changeDirection(Presenter.DIR_TOP)
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
+        }
+        binding.rightButton.setOnClickListener {
+            presenter.changeDirection(Presenter.DIR_RIGHT)
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
+        }
+        binding.bottomButton.setOnClickListener {
+            presenter.changeDirection(Presenter.DIR_BOTTOM)
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
+        }
+        binding.leftButton.setOnClickListener {
+            presenter.changeDirection(Presenter.DIR_LEFT)
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
+        }
+    }
+
 
     override fun onDestroyView() {
         binding.surfaceView.surfaceDestroyed(binding.surfaceView.holder)

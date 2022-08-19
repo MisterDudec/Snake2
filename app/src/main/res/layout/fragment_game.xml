@@ -6,13 +6,6 @@
     tools:context=".fragments.GameFragment"
     android:orientation="vertical">
 
-    <!--<Button
-        android:id="@+id/button_second"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/previous"
-        android:layout_gravity="top|end"/>-->
-
     <com.example.snake2.surface.MySurfaceView
         android:id="@+id/surface_view"
         android:layout_width="match_parent"
@@ -20,25 +13,25 @@
 
     <Button
         android:id="@+id/bottomButton"
-        style="@style/smallButtons"
+        style="@style/controlButtons"
         android:layout_marginEnd="72dp"
         android:layout_marginBottom="36dp"/>
 
     <Button
         android:id="@+id/leftButton"
-        style="@style/smallButtons"
+        style="@style/controlButtons"
         android:layout_marginEnd="108dp"
         android:layout_marginBottom="72dp" />
 
     <Button
         android:id="@+id/rightButton"
-        style="@style/smallButtons"
+        style="@style/controlButtons"
         android:layout_marginEnd="36dp"
         android:layout_marginBottom="72dp"/>
 
     <Button
         android:id="@+id/topButton"
-        style="@style/smallButtons"
+        style="@style/controlButtons"
         android:layout_marginEnd="72dp"
         android:layout_marginBottom="108dp"  />
 

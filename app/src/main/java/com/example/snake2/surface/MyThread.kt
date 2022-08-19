@@ -32,7 +32,7 @@ class MyThread(private val holder: SurfaceHolder, private val presenter: Present
         while (running) {
             var loops = 0
             while(getTickCount > nextGameTick && loops < maxFrameSkip) {
-                presenter.updateGame() //!!!
+                presenter.updateGame()
                 nextGameTick += skipTicks
                 Log.d("run", "loops: $loops")
                 loops++

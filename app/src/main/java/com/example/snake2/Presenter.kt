@@ -4,10 +4,12 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
+import android.util.Log
 import com.example.snake2.GameFieldData.Companion.SCREEN_HEIGHT
 import com.example.snake2.GameFieldData.Companion.SCREEN_WIDTH
 import com.example.snake2.GameFieldData.Companion.SIZE
 import com.example.snake2.GameFieldData.Companion.STEP
+import kotlinx.coroutines.*
 import java.lang.IndexOutOfBoundsException
 
 class Presenter {
@@ -59,25 +61,44 @@ class Presenter {
         }
         if (turning) {
             turningProgress += STEP
-            if (turningProgress >= SIZE) {
+            if (turningProgress >= SIZE + STEP) {
                 turning = false
                 if (index != gameFieldData.snake.size - 1) {
                     gameFieldData.snake[index + 1].changeDirection(direction)
-                } else {
-                    with (gameFieldData.turns) { removeAt(size - 1) }
                 }
+            }
+            if (index == gameFieldData.snake.size - 1) {
+                turning = false
+                with (gameFieldData.turns) { removeAt(0) }
             }
         }
     }
 
     fun changeDirection(dir: Int) {
-        with(gameFieldData.snake[0].rect) {
-            gameFieldData.turns.add(SnakeBody(Rect(left, top, right, bottom), DIR_STOP))
-            gameFieldData.snake[0].changeDirection(dir)
+        val changeDirectionJob: Job = CoroutineScope(Dispatchers.Default).launch {
+            with(gameFieldData.snake[0]) {
+                //if (turning) return@launch
+                if (direction == dir) return@launch
+                when (direction) {
+                    DIR_TOP -> if (dir == DIR_BOTTOM) return@launch
+                    DIR_RIGHT -> if (dir == DIR_LEFT) return@launch
+                    DIR_BOTTOM -> if (dir == DIR_TOP) return@launch
+                    DIR_LEFT -> if (dir == DIR_RIGHT) return@launch
+                }
+                Log.d("changeDirection", "turn")
+                while (turning) {
+                    delay(1)
+                    Log.d("changeDirection", "turning = $turning")
+                }
+                with (rect) { gameFieldData.turns.add(SnakeBody(Rect(left, top, right, bottom), DIR_STOP)) }
+                changeDirection(dir)
+                Log.d("changeDirection", "turned")
+            }
         }
+        //changeDirectionJob.start()
     }
 
-    private fun SnakeBody.moveTop() {
+    /*private fun SnakeBody.moveTop() {
         if (rect.top <= 0 && !transition) {
             val snakeBody = SnakeBody(Rect(rect.left, SCREEN_HEIGHT, rect.right, SCREEN_HEIGHT + SIZE), DIR_TOP)
             gameFieldData.snake.add(snakeBody)
@@ -89,17 +110,19 @@ class Presenter {
             gameFieldData.snake.remove(this)
             transition = false
         }
-    }
-
-    /*private fun Rect.moveTop() {
-        if (bottom >= 0) {
-            top -= step
-            bottom -= step
-        } else {
-            top = SCREEN_HEIGHT
-            bottom = SCREEN_HEIGHT + SIZE
-        }
     }*/
+
+    private fun SnakeBody.moveTop() {
+        with (rect) {
+            if (bottom >= 0) {
+                top -= STEP
+                bottom -= STEP
+            } else {
+                top = SCREEN_HEIGHT
+                bottom = SCREEN_HEIGHT + SIZE
+            }
+        }
+    }
 
     private fun SnakeBody.moveRight() {
         if (rect.left <= SCREEN_WIDTH) {

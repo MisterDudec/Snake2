@@ -2,13 +2,13 @@ package com.example.snake2.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
-import android.widget.Button
+import android.widget.RelativeLayout
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.snake2.Presenter
-import com.example.snake2.R
+import com.example.snake2.data.GameFieldData
 import com.example.snake2.databinding.FragmentGameBinding
 
 
@@ -34,11 +34,12 @@ class GameFragment : Fragment() {
             findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
         }*/
 
-        //val Button[
-        val presenter = Presenter()
-        binding.surfaceView.startGame(presenter)
+        view.post { //post is necessary to wait till drawing phase of view and get actual dimensions
+            val presenter = Presenter(GameFieldData(view.measuredWidth, view.measuredHeight))
+            binding.surfaceView.startGame(presenter)
+            setButtons(presenter)
+        }
 
-        setButtons(presenter)
     }
 
     private fun setButtons(presenter: Presenter) {
@@ -66,13 +67,13 @@ class GameFragment : Fragment() {
 
 
     override fun onDestroyView() {
-        binding.surfaceView.surfaceDestroyed(binding.surfaceView.holder)
+        //binding.surfaceView.surfaceDestroyed(binding.surfaceView.holder)
         super.onDestroyView()
         _binding = null
     }
 
     override fun onPause() {
-        binding.surfaceView.surfaceDestroyed(binding.surfaceView.holder)
+        //binding.surfaceView.surfaceDestroyed(binding.surfaceView.holder)
         super.onPause()
         //binding.surfaceView.
     }
@@ -81,6 +82,16 @@ class GameFragment : Fragment() {
         super.onResume()
         //binding.surfaceView.onResume()
     }
-
-
 }
+
+/**
+Лучше, чтобы передача UI поля потоку происходила посредством WeakReference (или где-то
+устанавливался бы референс в null). Иначе, в случае зависания потока будет мемори лик
+целой активити со всем наполнением потому как потоки не обязательно сразу удаляются
+мусоросборщиком, а могут еще жить неопределенное время. В этом случае, если запускать
+приложение несколько раз, размер свободного пространства на хипе может быстро сократиться,
+что может привести к ООМ эксепшену.
+
+Пишу это не потому что охото придраться к коду, а потому, что в своем большом проекте уже
+большое кличество времени потратили на избавление от подобных мемори ликов.
+ */

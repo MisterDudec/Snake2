@@ -5,8 +5,8 @@ import android.graphics.Canvas
 import android.os.SystemClock
 import android.util.Log
 import android.view.SurfaceHolder
-import com.example.snake2.GameFieldData
 import com.example.snake2.Presenter
+import com.example.snake2.data.GameFieldData
 
 /**
  * Created by Sex_predator on 27.03.2016.
@@ -27,6 +27,7 @@ class MyThread(private val holder: SurfaceHolder, private val presenter: Present
         var canvas: Canvas?
         var nextGameTick = getTickCount
         var interpolation: Float
+        presenter.startGame()
 
         var drawLoops = 0
         while (running) {

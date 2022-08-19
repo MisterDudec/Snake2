@@ -5,15 +5,17 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.Log
-import com.example.snake2.GameFieldData.Companion.SCREEN_HEIGHT
-import com.example.snake2.GameFieldData.Companion.SCREEN_WIDTH
-import com.example.snake2.GameFieldData.Companion.SIZE
-import com.example.snake2.GameFieldData.Companion.STEP
+import com.example.snake2.data.Apple
+import com.example.snake2.data.GameFieldData
+import com.example.snake2.data.GameFieldData.Companion.SIZE
+import com.example.snake2.data.GameFieldData.Companion.STEP
+import com.example.snake2.data.Plug
+import com.example.snake2.data.Snake
 import kotlinx.coroutines.*
 import java.lang.IndexOutOfBoundsException
+import kotlin.random.Random
 
-class Presenter {
-    private val gameFieldData = GameFieldData()
+class Presenter(private val gameFieldData: GameFieldData) {
     private val paint: Paint = Paint()
 
     companion object {
@@ -29,6 +31,10 @@ class Presenter {
     init {
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
+    }
+
+    fun startGame() {
+        gameFieldData.addApple()
     }
 
     fun updateGame() {
@@ -50,9 +56,13 @@ class Presenter {
             canvas.drawRect(gameFieldData.snake[i].rect, paint)
         for (i in gameFieldData.turns.indices)
             canvas.drawRect(gameFieldData.turns[i].rect, paint)
+
+        paint.color = Color.GREEN
+        for (i in gameFieldData.apples.indices)
+            canvas.drawRect(gameFieldData.apples[i].rect, paint)
     }
 
-    private fun SnakeBody.move(index: Int) {
+    private fun Snake.move(index: Int) {
         when (direction) {
             DIR_TOP -> moveTop()
             DIR_RIGHT -> moveRight()
@@ -75,8 +85,8 @@ class Presenter {
     }
 
     fun changeDirection(dir: Int) {
-        val changeDirectionJob: Job = CoroutineScope(Dispatchers.Default).launch {
-            with(gameFieldData.snake[0]) {
+        CoroutineScope(Dispatchers.Default).launch {
+            with (gameFieldData.snake[0]) {
                 //if (turning) return@launch
                 if (direction == dir) return@launch
                 when (direction) {
@@ -90,12 +100,54 @@ class Presenter {
                     delay(1)
                     Log.d("changeDirection", "turning = $turning")
                 }
-                with (rect) { gameFieldData.turns.add(SnakeBody(Rect(left, top, right, bottom), DIR_STOP)) }
+                with (rect) { gameFieldData.turns.add(Plug(Rect(left, top, right, bottom))) }
                 changeDirection(dir)
                 Log.d("changeDirection", "turned")
             }
+        } //val changeDirectionJob: Job =
+    }
+
+
+    fun Snake.moveTop() {
+        with (rect) {
+            if (bottom >= 0) {
+                top -= STEP
+                bottom -= STEP
+            } else {
+                top = gameFieldData.height
+                bottom = gameFieldData.height + SIZE
+            }
         }
-        //changeDirectionJob.start()
+    }
+
+    fun Snake.moveRight() {
+        if (rect.left <= gameFieldData.width) {
+            rect.right += STEP
+            rect.left += STEP
+        } else {
+            rect.left = 0 - SIZE
+            rect.right = 0
+        }
+    }
+
+    fun Snake.moveBottom() {
+        if (rect.top <= gameFieldData.height) {
+            rect.top += STEP
+            rect.bottom += STEP
+        } else {
+            rect.top = 0 - SIZE
+            rect.bottom = 0
+        }
+    }
+
+    fun Snake.moveLeft() {
+        if (rect.right >= 0) {
+            rect.right -= STEP
+            rect.left -= STEP
+        } else {
+            rect.left = gameFieldData.width
+            rect.right = gameFieldData.width + SIZE
+        }
     }
 
     /*private fun SnakeBody.moveTop() {
@@ -111,48 +163,6 @@ class Presenter {
             transition = false
         }
     }*/
-
-    private fun SnakeBody.moveTop() {
-        with (rect) {
-            if (bottom >= 0) {
-                top -= STEP
-                bottom -= STEP
-            } else {
-                top = SCREEN_HEIGHT
-                bottom = SCREEN_HEIGHT + SIZE
-            }
-        }
-    }
-
-    private fun SnakeBody.moveRight() {
-        if (rect.left <= SCREEN_WIDTH) {
-            rect.right += STEP
-            rect.left += STEP
-        } else {
-            rect.left = 0 - SIZE
-            rect.right = 0
-        }
-    }
-
-    private fun SnakeBody.moveBottom() {
-        if (rect.top <= SCREEN_HEIGHT) {
-            rect.top += STEP
-            rect.bottom += STEP
-        } else {
-            rect.top = 0 - SIZE
-            rect.bottom = 0
-        }
-    }
-
-    private fun SnakeBody.moveLeft() {
-        if (rect.right >= 0) {
-            rect.right -= STEP
-            rect.left -= STEP
-        } else {
-            rect.left = SCREEN_WIDTH
-            rect.right = SCREEN_WIDTH + SIZE
-        }
-    }
 
     /*private fun Rect.move() {
         var oppositeSide: Int

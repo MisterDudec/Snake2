@@ -30,10 +30,6 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        /*binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
-        }*/
-
         view.post { //post is necessary to wait till drawing phase of view and get actual dimensions
             val presenter = Presenter(GameFieldData(view.measuredWidth, view.measuredHeight))
             binding.surfaceView.startGame(presenter)
@@ -60,6 +56,11 @@ class GameFragment : Fragment() {
         }
         binding.leftButton.setOnClickListener {
             presenter.changeDirection(Presenter.DIR_LEFT)
+            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
+        }
+        binding.pause.setOnClickListener {
+            presenter.pauseResumeGame()
             it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
             it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
         }

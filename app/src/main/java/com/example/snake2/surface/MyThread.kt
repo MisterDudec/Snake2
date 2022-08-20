@@ -31,11 +31,14 @@ class MyThread(private val holder: SurfaceHolder, private val presenter: Present
 
         var drawLoops = 0
         while (running) {
+            while (presenter.isPaused()) {
+                sleep(skipTicks.toLong())
+            }
             var loops = 0
             while(getTickCount > nextGameTick && loops < maxFrameSkip) {
                 presenter.updateGame()
                 nextGameTick += skipTicks
-                Log.d("run", "loops: $loops")
+                Log.v("$this/run", "loops: $loops")
                 loops++
             }
 
@@ -45,7 +48,7 @@ class MyThread(private val holder: SurfaceHolder, private val presenter: Present
                 canvas = holder.lockCanvas() //получаем canvas
                 synchronized(holder) {
                     presenter.drawFrame(canvas) //функция рисования //drawFrame(interpolation)
-                    Log.d("run", "draw: $drawLoops")
+                    Log.v("$this/run", "draw: $drawLoops")
                     drawLoops++
                 }
             } catch (e: NullPointerException) {

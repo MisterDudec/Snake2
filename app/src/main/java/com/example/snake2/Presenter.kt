@@ -4,19 +4,21 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import android.util.Log
 import com.example.snake2.data.Apple
 import com.example.snake2.data.GameFieldData
 import com.example.snake2.data.GameFieldData.Companion.SIZE
 import com.example.snake2.data.GameFieldData.Companion.STEP
 import com.example.snake2.data.Plug
 import com.example.snake2.data.Snake
-import kotlinx.coroutines.*
-import java.lang.IndexOutOfBoundsException
-import kotlin.random.Random
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class Presenter(private val gameFieldData: GameFieldData) {
+    private val logName = "Presenter"
     private val paint: Paint = Paint()
+    private var pause = false
 
     companion object {
         const val DIR_STOP = -1
@@ -33,61 +35,68 @@ class Presenter(private val gameFieldData: GameFieldData) {
         paint.style = Paint.Style.FILL
     }
 
+    fun pauseResumeGame() {
+        pause = !pause
+    }
+
+    fun isPaused() : Boolean {
+        return pause
+    }
+
     fun startGame() {
-        gameFieldData.addApple()
+        repeat(3) {
+            gameFieldData.addApple()
+        }
     }
 
     fun updateGame() {
-        for (i in gameFieldData.snake.indices) {
-            try {
-                with (gameFieldData.snake[i]) {
-                    move(gameFieldData.snake.indexOf(this))
-                }
-            } catch (e: IndexOutOfBoundsException) {
-                e.printStackTrace()
-            }
+        gameFieldData.snake.forEachIndexed { index, snake ->
+            snake.move(index)
         }
+        checkSnakeCollision()
+        checkAppleCollision()
     }
 
     fun drawFrame(canvas: Canvas) {
         canvas.drawColor(Color.BLACK)
-        paint.color = Color.RED
-        for (i in gameFieldData.snake.indices)
-            canvas.drawRect(gameFieldData.snake[i].rect, paint)
-        for (i in gameFieldData.turns.indices)
-            canvas.drawRect(gameFieldData.turns[i].rect, paint)
 
         paint.color = Color.GREEN
         for (i in gameFieldData.apples.indices)
             canvas.drawRect(gameFieldData.apples[i].rect, paint)
+
+        for (s in gameFieldData.snake)
+            canvas.drawRect(s.rect, s.paint)
+
+        paint.color = Color.RED
+        //for (turn in gameFieldData.turns) canvas.drawRect(turn.rect, paint)
+
     }
 
     private fun Snake.move(index: Int) {
-        when (direction) {
-            DIR_TOP -> moveTop()
-            DIR_RIGHT -> moveRight()
-            DIR_BOTTOM -> moveBottom()
-            DIR_LEFT -> moveLeft()
-        }
         if (turning) {
             turningProgress += STEP
             if (turningProgress >= SIZE + STEP) {
                 turning = false
-                if (index != gameFieldData.snake.size - 1) {
+                gameFieldData.turns
+                if (index != gameFieldData.snake.size - 1)
                     gameFieldData.snake[index + 1].changeDirection(direction)
-                }
             }
             if (index == gameFieldData.snake.size - 1) {
                 turning = false
                 with (gameFieldData.turns) { removeAt(0) }
             }
         }
+        when (direction) {
+            DIR_TOP -> moveTop()
+            DIR_RIGHT -> moveRight()
+            DIR_BOTTOM -> moveBottom()
+            DIR_LEFT -> moveLeft()
+        }
     }
 
     fun changeDirection(dir: Int) {
         CoroutineScope(Dispatchers.Default).launch {
             with (gameFieldData.snake[0]) {
-                //if (turning) return@launch
                 if (direction == dir) return@launch
                 when (direction) {
                     DIR_TOP -> if (dir == DIR_BOTTOM) return@launch
@@ -95,20 +104,69 @@ class Presenter(private val gameFieldData: GameFieldData) {
                     DIR_BOTTOM -> if (dir == DIR_TOP) return@launch
                     DIR_LEFT -> if (dir == DIR_RIGHT) return@launch
                 }
-                Log.d("changeDirection", "turn")
                 while (turning) {
                     delay(1)
-                    Log.d("changeDirection", "turning = $turning")
                 }
-                with (rect) { gameFieldData.turns.add(Plug(Rect(left, top, right, bottom))) }
+                with (rect) { gameFieldData.turns.add(Plug(Rect(left, top, right, bottom), 0)) }
+
                 changeDirection(dir)
-                Log.d("changeDirection", "turned")
             }
         } //val changeDirectionJob: Job =
     }
 
+    private fun checkAppleCollision() {
+        for (apple in gameFieldData.apples) {
+            if (apple.rect.intersect(gameFieldData.snake[0].rect)) {
+                gameFieldData.appleEaten(apple)
+                break
+            }
+        }
+    }
 
-    fun Snake.moveTop() {
+    private fun checkSnakeCollision() {
+        if (!gameFieldData.selfEating) {
+            var a: Int? = null
+
+            for (i in 4 until gameFieldData.snake.size) {
+                val s = gameFieldData.snake[i]
+
+                with (gameFieldData.snake[0].rect) {
+                    val b1 = s.rect.intersect(left, top, right, bottom)
+                    if (b1) {
+                        a = i
+                    }
+                }
+                if (a != null) {
+                    gameFieldData.snakeEaten(a!!)
+                    break
+                }
+            }
+        }
+    }
+
+    /*private fun checkSnakeCollisionOld() {
+        var a: Snake? = null
+
+        for (i in 1 until gameFieldData.snake.size) {
+
+        }
+        for (snake in gameFieldData.snake) {
+            val rangeX = IntRange(snake.rect.left, snake.rect.right)
+            val rangeY = IntRange(snake.rect.top, snake.rect.bottom)
+
+            with (gameFieldData.snake[0].rect) {
+
+                val b1 = rangeX.contains(centerX() - SIZE / 2) && rangeY.contains(centerY() - SIZE / 2)
+                val b2 = rangeX.contains(centerX() + SIZE / 2) && rangeY.contains(centerY() + SIZE / 2)
+                if (b1 || b2) {
+                    a = snake
+                }
+            }
+        }
+        if (a != null) gameFieldData.snakeEaten(a!!)
+    }*/
+
+    private fun Snake.moveTop() {
         with (rect) {
             if (bottom >= 0) {
                 top -= STEP
@@ -120,7 +178,7 @@ class Presenter(private val gameFieldData: GameFieldData) {
         }
     }
 
-    fun Snake.moveRight() {
+    private fun Snake.moveRight() {
         if (rect.left <= gameFieldData.width) {
             rect.right += STEP
             rect.left += STEP
@@ -130,7 +188,7 @@ class Presenter(private val gameFieldData: GameFieldData) {
         }
     }
 
-    fun Snake.moveBottom() {
+    private fun Snake.moveBottom() {
         if (rect.top <= gameFieldData.height) {
             rect.top += STEP
             rect.bottom += STEP
@@ -140,7 +198,7 @@ class Presenter(private val gameFieldData: GameFieldData) {
         }
     }
 
-    fun Snake.moveLeft() {
+    private fun Snake.moveLeft() {
         if (rect.right >= 0) {
             rect.right -= STEP
             rect.left -= STEP
@@ -148,6 +206,24 @@ class Presenter(private val gameFieldData: GameFieldData) {
             rect.left = gameFieldData.width
             rect.right = gameFieldData.width + SIZE
         }
+    }
+
+    private fun checkAppleCollision1() {
+        var a: Apple? = null
+        for (apple in gameFieldData.apples) {
+            val rangeX = IntRange(apple.rect.left, apple.rect.right)
+            val rangeY = IntRange(apple.rect.top, apple.rect.bottom)
+
+            with (gameFieldData.snake[0].rect) {
+
+                val b1 = rangeX.contains(centerX() - SIZE / 2) && rangeY.contains(centerY() - SIZE / 2)
+                val b2 = rangeX.contains(centerX() + SIZE / 2) && rangeY.contains(centerY() + SIZE / 2)
+                if (b1 || b2) {
+                    a = apple
+                }
+            }
+        }
+        if (a != null) gameFieldData.appleEaten(a!!)
     }
 
     /*private fun SnakeBody.moveTop() {

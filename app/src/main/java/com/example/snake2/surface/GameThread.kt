@@ -11,16 +11,31 @@ import com.example.snake2.data.GameFieldData
 /**
  * Created by Sex_predator on 27.03.2016.
  */
-class MyThread(private val holder: SurfaceHolder, private val presenter: Presenter) : Thread() {
+class GameThread(private val holder: SurfaceHolder, private val presenter: Presenter) : Thread() {
     private var running = false
     private val maxFrameSkip = 5
-    private val ticksPerSecond = 30
-    private val skipTicks = 1000 / ticksPerSecond
+    private var ticksPerSecond = TICKS_30
+    private var skipTicks = 1000 / ticksPerSecond
 
     private val getTickCount: Long get() = SystemClock.uptimeMillis()
 
+    companion object {
+        const val TICKS_5 = 5
+        const val TICKS_30 = 30
+        const val TICKS_120 = 120
+    }
+
     fun setRunning(running: Boolean) {
         this.running = running
+    }
+
+    fun changeTicks() {
+        ticksPerSecond = when (ticksPerSecond) {
+            //TICKS_30 -> TICKS_120
+            TICKS_30 -> TICKS_5
+            else -> TICKS_30
+        }
+        skipTicks = 1000 / ticksPerSecond
     }
 
     override fun run() {

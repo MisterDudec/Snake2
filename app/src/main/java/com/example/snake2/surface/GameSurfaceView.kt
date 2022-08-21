@@ -10,9 +10,10 @@ import com.example.snake2.MyGestureListener
 import com.example.snake2.Presenter
 
 
-class MySurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
+class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     SurfaceView(context, attrs, defStyle), SurfaceHolder.Callback {
-    private var thread: MyThread? = null
+    var thread: GameThread? = null
+
     private val gestureListener = GestureDetectorCompat(this.context, MyGestureListener())
 
 
@@ -29,10 +30,9 @@ class MySurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     }
 
     fun startGame(presenter: Presenter) {
-        thread = MyThread(holder, presenter)
+        thread = GameThread(holder, presenter)
         thread!!.setRunning(true)
         thread!!.start()
-        //post(thread)
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {

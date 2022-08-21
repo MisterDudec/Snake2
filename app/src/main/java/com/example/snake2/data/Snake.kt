@@ -6,9 +6,10 @@ import android.graphics.Rect
 import com.example.snake2.Presenter
 import com.example.snake2.data.GameFieldData.Companion.SIZE
 import com.example.snake2.data.GameFieldData.Companion.STEP
+import org.jetbrains.annotations.TestOnly
 
 data class Snake(override val rect: Rect, var direction: Int, val index: Int) : Cell (rect) {
-    var transition = false
+    private var transition = false
     var turning = false
     var turningProgress = SIZE + STEP
     val paint = Paint()
@@ -21,59 +22,65 @@ data class Snake(override val rect: Rect, var direction: Int, val index: Int) : 
         }
     }
 
-    fun setColor(color: Int) {
+    @TestOnly
+    private fun setColor(color: Int) {
         paint.color = color
     }
 
-
-
     fun moveTop(last: Boolean, height: Int) {
         with (rect) {
-            if (top >= 0) {
+            if (bottom >= 0) {
                 top -= STEP
                 if (!turning || last) bottom -= STEP
+                if (isTransition() && bottom <= height) completeTransition()
             } else {
                 top = height
                 bottom = height + SIZE
             }
+            if (top <= 5) startTransition()
         }
     }
 
     fun moveRight(last: Boolean, width: Int) {
         with (rect) {
-            if (right <= width) {
+            if (left <= width) {
                 right += STEP
                 if (!turning || last) left += STEP
+                if (isTransition() && left >= 0) completeTransition()
             } else {
+                startTransition()
                 left = 0 - SIZE
                 right = 0
             }
+            if (right >= width - 5) startTransition()
         }
     }
 
     fun moveBottom(last: Boolean, height: Int) {
         with (rect) {
-            if (bottom <= height) {
+            if (top <= height) {
                 bottom += STEP
                 if (!turning || last) top += STEP
+                if (isTransition() && top >= 0) completeTransition()
             } else {
                 top = 0 - SIZE
                 bottom = 0
             }
+            if (bottom >= height - 5) startTransition()
         }
     }
 
     fun moveLeft(last: Boolean, width: Int) {
         with (rect) {
-            if (left >= 0) {
+            if (right >= 0) {
                 left -= STEP
                 if (!turning || last) right -= STEP
                 if (isTransition() && right <= width) completeTransition()
             } else {
-                startTransition()
                 left = width
                 right = width + SIZE
             }
+            if (left <= 5) startTransition()
         }
     }
 
@@ -104,4 +111,60 @@ data class Snake(override val rect: Rect, var direction: Int, val index: Int) : 
     fun isTransition(): Boolean {
         return transition
     }
+
+    /*fun moveTop(last: Boolean, height: Int) {
+        with (rect) {
+            if (top >= 0) {
+                top -= STEP
+                if (!turning || last) bottom -= STEP
+                if (isTransition() && bottom <= height) completeTransition()
+            } else {
+                startTransition()
+                top = height
+                bottom = height + SIZE
+            }
+        }
+    }
+
+    fun moveRight(last: Boolean, width: Int) {
+        with (rect) {
+            if (right <= width) {
+                right += STEP
+                if (!turning || last) left += STEP
+                if (isTransition() && left >= 0) completeTransition()
+            } else {
+                startTransition()
+                left = 0 - SIZE
+                right = 0
+            }
+        }
+    }
+
+    fun moveBottom(last: Boolean, height: Int) {
+        with (rect) {
+            if (bottom <= height) {
+                bottom += STEP
+                if (!turning || last) top += STEP
+                if (isTransition() && top >= 0) completeTransition()
+            } else {
+                startTransition()
+                top = 0 - SIZE
+                bottom = 0
+            }
+        }
+    }
+
+    fun moveLeft(last: Boolean, width: Int) {
+        with (rect) {
+            if (left >= 0) {
+                left -= STEP
+                if (!turning || last) right -= STEP
+                if (isTransition() && right <= width) completeTransition()
+            } else {
+                startTransition()
+                left = width
+                right = width + SIZE
+            }
+        }
+    }*/
 }

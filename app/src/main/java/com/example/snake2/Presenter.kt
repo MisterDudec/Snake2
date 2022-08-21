@@ -103,7 +103,7 @@ class Presenter(
                     DIR_BOTTOM -> if (dir == DIR_TOP) return@launch
                     DIR_LEFT -> if (dir == DIR_RIGHT) return@launch
                 }
-                while (turning) {
+                while (turning || isTransition()) {
                     delay(10)
                 }
                 //with (rect) { gameFieldData.turns.add(Plug(Rect(left, top, right, bottom), 0)) }

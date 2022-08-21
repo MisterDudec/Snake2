@@ -20,32 +20,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    val APP_PREFERENCES = "settings"
-
-    val APP_PREFERENCES_UNCENSOREDMOD = "uncensoredMod"
-    val APP_PREFERENCES_GODMOD = "godMod"
-
-    var APP_PREFERENCES_GAMEMOD_VALUE = false
-    var APP_PREFERENCES_GODMOD_VALUE = false
-    var APP_PREFERENCES_SNAKEBODY_VALUE = 0
-    var APP_PREFERENCES_CHERRY_VALUE = 0
-
-    private val mainSettings: SharedPreferences? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        defaultOnCreate()
-    }
 
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-
-        //((activity as AppCompatActivity?)!!.supportActionBar)?.hide()
-        supportActionBar?.hide()
-    }
-
-    private fun defaultOnCreate() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -54,6 +32,13 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        //((activity as AppCompatActivity?)!!.supportActionBar)?.hide()
+        supportActionBar?.hide()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -105,6 +90,19 @@ class MainActivity : AppCompatActivity() {
             else -> super.onTouchEvent(event)
         }
     }*/
+
+
+    val APP_PREFERENCES = "settings"
+
+    val APP_PREFERENCES_UNCENSOREDMOD = "uncensoredMod"
+    val APP_PREFERENCES_GODMOD = "godMod"
+
+    var APP_PREFERENCES_GAMEMOD_VALUE = false
+    var APP_PREFERENCES_GODMOD_VALUE = false
+    var APP_PREFERENCES_SNAKEBODY_VALUE = 0
+    var APP_PREFERENCES_CHERRY_VALUE = 0
+
+    private val mainSettings: SharedPreferences? = null
 
     /*override fun onPause() {
         super.onPause()

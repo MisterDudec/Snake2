@@ -1,21 +1,16 @@
 package com.example.snake2.fragments
 
 import android.annotation.SuppressLint
-import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.example.snake2.Presenter
 import com.example.snake2.R
 import com.example.snake2.data.GameFieldData
 import com.example.snake2.databinding.FragmentGameBinding
-import com.example.snake2.surface.MyThread
-import com.google.android.material.appbar.MaterialToolbar
 
 
 /**
@@ -38,14 +33,9 @@ class GameFragment : Fragment() {
 
         ((activity as AppCompatActivity?)!!.supportActionBar)?.hide()
 
-        //binding.surfaceView.post
-
-
         val backgroundColor = view.context.getColor(R.color.background_surface_view)
         val snakeColor = view.context.getColor(R.color.snake)
         val appleColor = view.context.getColor(R.color.apple)
-
-        //view.post(MyThread(binding.surfaceView.holder, Presenter(GameFieldData(view.measuredWidth, view.measuredHeight), backgroundColor, snakeColor, appleColor)))
 
         binding.surfaceView.post { //post is necessary to wait till drawing phase of view and get actual dimensions
             val presenter = Presenter(GameFieldData(view.measuredWidth, view.measuredHeight), backgroundColor, snakeColor, appleColor)
@@ -57,31 +47,35 @@ class GameFragment : Fragment() {
     private fun setButtons(presenter: Presenter) {
         binding.topButton.setOnClickListener {
             presenter.changeDirection(Presenter.DIR_TOP)
-            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
+            click(it)
         }
         binding.rightButton.setOnClickListener {
             presenter.changeDirection(Presenter.DIR_RIGHT)
-            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
+            click(it)
         }
         binding.bottomButton.setOnClickListener {
             presenter.changeDirection(Presenter.DIR_BOTTOM)
-            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
+            click(it)
         }
         binding.leftButton.setOnClickListener {
             presenter.changeDirection(Presenter.DIR_LEFT)
-            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
+            click(it)
         }
         binding.pause.setOnClickListener {
             if (!presenter.pause) (it as AppCompatImageButton).setImageResource(R.drawable.ic_baseline_play_arrow_24)
             else (it as AppCompatImageButton).setImageResource(R.drawable.ic_baseline_pause_24)
             presenter.pauseResumeGame()
-            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
+            click(it)
         }
+        binding.speedButton.setOnClickListener {
+            binding.surfaceView.thread?.changeTicks()
+            click(it)
+        }
+    }
+
+    private fun click(it: View) {
+        it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+        it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
     }
 
     override fun onDestroyView() {

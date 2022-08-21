@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@color/emptyCell"
+    android:background="@color/layout_buttons_background"
     tools:context=".fragments.MainMenuFragment">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
+        android:textColor="@color/answer_text"
         android:textSize="12sp"
         android:gravity="center"
         android:layout_gravity="top"
@@ -22,13 +22,13 @@
         android:layout_height="match_parent"
         android:paddingTop="24dp">
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/singlePlayerButton"
             android:text="@string/SinglePlayer"
             android:layout_marginTop="0dp"
             style="@style/mainMenuButton" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/settingsButton"
             android:layout_marginTop="64dp"
             android:text="@string/Settings"
@@ -37,7 +37,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/answer_text"
             android:textSize="12sp"
             android:layout_gravity="bottom"
             android:text="KojimaSatoshiNakomotaHuemotaHawkAkVityayProduction"/>

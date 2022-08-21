@@ -14,7 +14,7 @@ data class Snake(override val rect: Rect, var direction: Int, val index: Int) : 
     val paint = Paint()
 
     init {
-        when (index % 3) {
+        when (index % 2) {
             0 -> setColor(Color.GREEN)
             1 -> setColor(Color.CYAN)
             2 -> setColor(Color.BLUE)
@@ -39,5 +39,17 @@ data class Snake(override val rect: Rect, var direction: Int, val index: Int) : 
             Presenter.DIR_BOTTOM -> rect.top = rect.bottom - SIZE
             Presenter.DIR_LEFT -> rect.right = rect.left + SIZE
         }
+    }
+
+    fun startTransition() {
+        transition = true
+    }
+
+    fun completeTransition() {
+        transition = false
+    }
+
+    fun isTransition(): Boolean {
+        return transition
     }
 }

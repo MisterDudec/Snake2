@@ -12,33 +12,38 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bottomButton"
         style="@style/controlButtons"
         android:layout_marginEnd="72dp"
         android:layout_marginBottom="36dp"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/leftButton"
         style="@style/controlButtons"
         android:layout_marginEnd="108dp"
         android:layout_marginBottom="72dp" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/rightButton"
         style="@style/controlButtons"
         android:layout_marginEnd="36dp"
         android:layout_marginBottom="72dp"/>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/topButton"
         style="@style/controlButtons"
         android:layout_marginEnd="72dp"
         android:layout_marginBottom="108dp"  />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/pause"
         style="@style/ruleBututtons"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_margin="16dp"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_baseline_pause_24"
         android:layout_alignParentEnd="true"/>
 
 </RelativeLayout>

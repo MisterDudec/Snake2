@@ -15,10 +15,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class Presenter(private val gameFieldData: GameFieldData) {
+class Presenter(
+    private val gameFieldData: GameFieldData,
+    private val backgroundColor: Int,
+    private val snakeColor: Int,
+    private val appleColor: Int
+) {
     private val logName = "Presenter"
     private val paint: Paint = Paint()
-    private var pause = false
+    var pause = false
 
     companion object {
         const val DIR_STOP = -1
@@ -58,16 +63,15 @@ class Presenter(private val gameFieldData: GameFieldData) {
     }
 
     fun drawFrame(canvas: Canvas) {
-        canvas.drawColor(Color.BLACK)
+        canvas.drawColor(backgroundColor)
 
-        //canvas.draw
-
-        paint.color = Color.RED
+        paint.color = appleColor
         for (i in gameFieldData.apples.indices)
             canvas.drawRect(gameFieldData.apples[i].rect, paint)
 
+        paint.color = snakeColor
         for (s in gameFieldData.snake)
-            canvas.drawRect(s.rect, s.paint)
+            canvas.drawRect(s.rect, paint)
 
     }
 
@@ -136,7 +140,7 @@ class Presenter(private val gameFieldData: GameFieldData) {
 
     private fun Snake.moveTop(last: Boolean) {
         with (rect) {
-            if (bottom >= 0) {
+            if (top >= 0) {
                 top -= STEP
                 if (!turning || last) bottom -= STEP
             } else {
@@ -147,9 +151,7 @@ class Presenter(private val gameFieldData: GameFieldData) {
     }
 
     private fun Snake.moveRight(last: Boolean) {
-
-
-        if (rect.left <= gameFieldData.width) {
+        if (rect.right <= gameFieldData.width) {
             rect.right += STEP
             if (!turning || last) rect.left += STEP
         } else {
@@ -159,7 +161,7 @@ class Presenter(private val gameFieldData: GameFieldData) {
     }
 
     private fun Snake.moveBottom(last: Boolean) {
-        if (rect.top <= gameFieldData.height) {
+        if (rect.bottom <= gameFieldData.height) {
             rect.bottom += STEP
             if (!turning || last) rect.top += STEP
         } else {
@@ -169,7 +171,7 @@ class Presenter(private val gameFieldData: GameFieldData) {
     }
 
     private fun Snake.moveLeft(last: Boolean) {
-        if (rect.right >= 0) {
+        if (rect.left >= 0) {
             rect.left -= STEP
             if (!turning || last) rect.right -= STEP
         } else {

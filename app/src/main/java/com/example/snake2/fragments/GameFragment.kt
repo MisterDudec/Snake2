@@ -2,12 +2,12 @@ package com.example.snake2.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
-import android.widget.RelativeLayout
+import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
 import com.example.snake2.Presenter
+import com.example.snake2.R
 import com.example.snake2.data.GameFieldData
 import com.example.snake2.databinding.FragmentGameBinding
 
@@ -29,9 +29,12 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val backgroundColor = view.context.getColor(R.color.background_surface_view)
+        val snakeColor = view.context.getColor(R.color.snake)
+        val appleColor = view.context.getColor(R.color.apple)
 
         view.post { //post is necessary to wait till drawing phase of view and get actual dimensions
-            val presenter = Presenter(GameFieldData(view.measuredWidth, view.measuredHeight))
+            val presenter = Presenter(GameFieldData(view.measuredWidth, view.measuredHeight), backgroundColor, snakeColor, appleColor)
             binding.surfaceView.startGame(presenter)
             setButtons(presenter)
         }
@@ -60,6 +63,10 @@ class GameFragment : Fragment() {
             it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
         }
         binding.pause.setOnClickListener {
+            if (it is AppCompatImageButton ) {
+                if (!presenter.pause) it.setImageResource(R.drawable.ic_baseline_play_arrow_24)
+                else it.setImageResource(R.drawable.ic_baseline_pause_24)
+            }
             presenter.pauseResumeGame()
             it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
             it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))

@@ -1,21 +1,18 @@
 package com.example.snake2.surface
 
 import android.content.Context
-import android.graphics.Canvas
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.view.GestureDetectorCompat
-import com.example.snake2.data.GameFieldData
 import com.example.snake2.MyGestureListener
 import com.example.snake2.Presenter
 
 
 class MySurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     SurfaceView(context, attrs, defStyle), SurfaceHolder.Callback {
-    private var mMyThread: MyThread? = null
+    private var thread: MyThread? = null
     private val gestureListener = GestureDetectorCompat(this.context, MyGestureListener())
 
 
@@ -32,9 +29,10 @@ class MySurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     }
 
     fun startGame(presenter: Presenter) {
-        mMyThread = MyThread(holder, presenter)
-        mMyThread!!.setRunning(true)
-        mMyThread!!.start()
+        thread = MyThread(holder, presenter)
+        thread!!.setRunning(true)
+        thread!!.start()
+        //post(thread)
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -44,10 +42,10 @@ class MySurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     override fun surfaceDestroyed(holder: SurfaceHolder) { //когда view исчезает из поля зрения
         var retry = true
-        mMyThread?.setRunning(false) //останавливает процесс
+        thread?.setRunning(false) //останавливает процесс
         while (retry) {
             try {
-                mMyThread?.join() //ждет окончательной остановки процесса
+                thread?.join() //ждет окончательной остановки процесса
                 retry = false
             } catch (e: InterruptedException) {
                 e.printStackTrace()//не более чем формальность

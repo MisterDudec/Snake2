@@ -25,6 +25,58 @@ data class Snake(override val rect: Rect, var direction: Int, val index: Int) : 
         paint.color = color
     }
 
+
+
+    fun moveTop(last: Boolean, height: Int) {
+        with (rect) {
+            if (top >= 0) {
+                top -= STEP
+                if (!turning || last) bottom -= STEP
+            } else {
+                top = height
+                bottom = height + SIZE
+            }
+        }
+    }
+
+    fun moveRight(last: Boolean, width: Int) {
+        with (rect) {
+            if (right <= width) {
+                right += STEP
+                if (!turning || last) left += STEP
+            } else {
+                left = 0 - SIZE
+                right = 0
+            }
+        }
+    }
+
+    fun moveBottom(last: Boolean, height: Int) {
+        with (rect) {
+            if (bottom <= height) {
+                bottom += STEP
+                if (!turning || last) top += STEP
+            } else {
+                top = 0 - SIZE
+                bottom = 0
+            }
+        }
+    }
+
+    fun moveLeft(last: Boolean, width: Int) {
+        with (rect) {
+            if (left >= 0) {
+                left -= STEP
+                if (!turning || last) right -= STEP
+                if (isTransition() && right <= width) completeTransition()
+            } else {
+                startTransition()
+                left = width
+                right = width + SIZE
+            }
+        }
+    }
+
     fun changeDirection(dir: Int) {
         direction = dir
         turning = true

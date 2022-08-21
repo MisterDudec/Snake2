@@ -78,10 +78,10 @@ class Presenter(
     private fun Snake.move(index: Int) {
         val last = index == gameFieldData.snake.lastIndex
         when (direction) {
-            DIR_TOP -> moveTop(last)
-            DIR_RIGHT -> moveRight(last)
-            DIR_BOTTOM -> moveBottom(last)
-            DIR_LEFT -> moveLeft(last)
+            DIR_TOP -> moveTop(last, gameFieldData.height)
+            DIR_RIGHT -> moveRight(last, gameFieldData.width)
+            DIR_BOTTOM -> moveBottom(last, gameFieldData.height)
+            DIR_LEFT -> moveLeft(last, gameFieldData.width)
         }
         if (turning) {
             turningProgress += STEP
@@ -135,48 +135,6 @@ class Presenter(
                 if (a != null) break
             }
             if (a != null) gameFieldData.snakeEaten(a!!)
-        }
-    }
-
-    private fun Snake.moveTop(last: Boolean) {
-        with (rect) {
-            if (top >= 0) {
-                top -= STEP
-                if (!turning || last) bottom -= STEP
-            } else {
-                top = gameFieldData.height
-                bottom = gameFieldData.height + SIZE
-            }
-        }
-    }
-
-    private fun Snake.moveRight(last: Boolean) {
-        if (rect.right <= gameFieldData.width) {
-            rect.right += STEP
-            if (!turning || last) rect.left += STEP
-        } else {
-            rect.left = 0 - SIZE
-            rect.right = 0
-        }
-    }
-
-    private fun Snake.moveBottom(last: Boolean) {
-        if (rect.bottom <= gameFieldData.height) {
-            rect.bottom += STEP
-            if (!turning || last) rect.top += STEP
-        } else {
-            rect.top = 0 - SIZE
-            rect.bottom = 0
-        }
-    }
-
-    private fun Snake.moveLeft(last: Boolean) {
-        if (rect.left >= 0) {
-            rect.left -= STEP
-            if (!turning || last) rect.right -= STEP
-        } else {
-            rect.left = gameFieldData.width
-            rect.right = gameFieldData.width + SIZE
         }
     }
 

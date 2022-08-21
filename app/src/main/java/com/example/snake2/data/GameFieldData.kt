@@ -19,10 +19,10 @@ class GameFieldData(val width: Int, val height: Int) {
         const val STEP = 10
     }
 
-    private val startLeft = width / 2
-    private val startTop = height / 2
 
     init {
+        val startLeft = width / 2
+        val startTop = height / 2
         val rect = Rect(startLeft, startTop,startLeft + SIZE,startTop + SIZE)
         snake.add(Snake(rect, DIR_DEFAULT, 0))
         repeat(5) {

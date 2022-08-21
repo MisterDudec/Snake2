@@ -1,15 +1,21 @@
 package com.example.snake2.fragments
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.view.*
 import android.view.animation.AnimationUtils
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.example.snake2.Presenter
 import com.example.snake2.R
 import com.example.snake2.data.GameFieldData
 import com.example.snake2.databinding.FragmentGameBinding
+import com.example.snake2.surface.MyThread
+import com.google.android.material.appbar.MaterialToolbar
 
 
 /**
@@ -29,16 +35,23 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        ((activity as AppCompatActivity?)!!.supportActionBar)?.hide()
+
+        //binding.surfaceView.post
+
+
         val backgroundColor = view.context.getColor(R.color.background_surface_view)
         val snakeColor = view.context.getColor(R.color.snake)
         val appleColor = view.context.getColor(R.color.apple)
 
-        view.post { //post is necessary to wait till drawing phase of view and get actual dimensions
+        //view.post(MyThread(binding.surfaceView.holder, Presenter(GameFieldData(view.measuredWidth, view.measuredHeight), backgroundColor, snakeColor, appleColor)))
+
+        binding.surfaceView.post { //post is necessary to wait till drawing phase of view and get actual dimensions
             val presenter = Presenter(GameFieldData(view.measuredWidth, view.measuredHeight), backgroundColor, snakeColor, appleColor)
             binding.surfaceView.startGame(presenter)
             setButtons(presenter)
         }
-
     }
 
     private fun setButtons(presenter: Presenter) {
@@ -63,16 +76,13 @@ class GameFragment : Fragment() {
             it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
         }
         binding.pause.setOnClickListener {
-            if (it is AppCompatImageButton ) {
-                if (!presenter.pause) it.setImageResource(R.drawable.ic_baseline_play_arrow_24)
-                else it.setImageResource(R.drawable.ic_baseline_pause_24)
-            }
+            if (!presenter.pause) (it as AppCompatImageButton).setImageResource(R.drawable.ic_baseline_play_arrow_24)
+            else (it as AppCompatImageButton).setImageResource(R.drawable.ic_baseline_pause_24)
             presenter.pauseResumeGame()
             it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
             it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
         }
     }
-
 
     override fun onDestroyView() {
         //binding.surfaceView.surfaceDestroyed(binding.surfaceView.holder)

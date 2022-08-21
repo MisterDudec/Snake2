@@ -1,6 +1,7 @@
 package com.example.snake2
 
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -35,6 +36,13 @@ class MainActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         defaultOnCreate()
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        //((activity as AppCompatActivity?)!!.supportActionBar)?.hide()
+        supportActionBar?.hide()
     }
 
     private fun defaultOnCreate() {

@@ -61,30 +61,4 @@ class MyThread(private val holder: SurfaceHolder, private val presenter: Present
         }
     }
 
-    /*override fun run() {
-        var canvas: Canvas?
-        startTime = time
-        while (running) {
-            val curTime = time
-            val elapsedTime = curTime - prevRedrawTime
-            if (elapsedTime < redrawTime) continue //проверяет, прошло ли 10 мс
-            canvas = null
-            try {
-                canvas = mSurfaceHolder.lockCanvas() //получаем canvas
-                synchronized(mSurfaceHolder) {
-                    drawFrame(canvas) //функция рисования
-                }
-            } catch (e: NullPointerException) {
-                e.printStackTrace()*//*если canvas не доступен*//*
-            } finally {
-                if (canvas != null) mSurfaceHolder.unlockCanvasAndPost(canvas) //освобождаем canvas
-            }
-            prevRedrawTime = curTime
-        }
-    }*/
-
-    fun dip2px(context: Context, dpValue: Float): Int {
-        val scale: Float = context.resources.displayMetrics.density
-        return (dpValue * scale + 0.5f).toInt()
-    } //argbEvaluator
 }

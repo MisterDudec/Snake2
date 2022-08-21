@@ -7,7 +7,7 @@
     tools:context=".fragments.GameFragment"
     android:orientation="vertical">
 
-    <com.example.snake2.surface.GameSurfaceView
+    <com.example.snake2.view.GameSurfaceView
         android:id="@+id/surface_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

@@ -1,4 +1,4 @@
-package com.example.snake2.surface
+package com.example.snake2.view
 
 import android.content.Context
 import android.util.AttributeSet
@@ -7,7 +7,8 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.view.GestureDetectorCompat
 import com.example.snake2.MyGestureListener
-import com.example.snake2.Presenter
+import com.example.snake2.presenters.GameThread
+import com.example.snake2.presenters.Presenter
 
 
 class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :

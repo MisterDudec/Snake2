@@ -7,7 +7,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
-import com.example.snake2.Presenter
+import com.example.snake2.presenters.Presenter
 import com.example.snake2.R
 import com.example.snake2.data.GameFieldData
 import com.example.snake2.databinding.FragmentGameBinding

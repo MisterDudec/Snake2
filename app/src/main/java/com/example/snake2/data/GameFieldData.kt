@@ -2,10 +2,10 @@ package com.example.snake2.data
 
 import android.graphics.Rect
 import android.util.Log
-import com.example.snake2.Presenter.Companion.DIR_BOTTOM
-import com.example.snake2.Presenter.Companion.DIR_DEFAULT
-import com.example.snake2.Presenter.Companion.DIR_RIGHT
-import com.example.snake2.Presenter.Companion.DIR_TOP
+import com.example.snake2.presenters.Presenter.Companion.DIR_BOTTOM
+import com.example.snake2.presenters.Presenter.Companion.DIR_DEFAULT
+import com.example.snake2.presenters.Presenter.Companion.DIR_RIGHT
+import com.example.snake2.presenters.Presenter.Companion.DIR_TOP
 import kotlin.random.Random
 
 class GameFieldData(val width: Int, val height: Int) {

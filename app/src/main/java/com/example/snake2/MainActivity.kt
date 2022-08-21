@@ -16,7 +16,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.snake2.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 

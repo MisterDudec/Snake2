@@ -3,7 +3,7 @@ package com.example.snake2.data
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import com.example.snake2.Presenter
+import com.example.snake2.presenters.Presenter
 import com.example.snake2.data.GameFieldData.Companion.SIZE
 import com.example.snake2.data.GameFieldData.Companion.STEP
 import org.jetbrains.annotations.TestOnly

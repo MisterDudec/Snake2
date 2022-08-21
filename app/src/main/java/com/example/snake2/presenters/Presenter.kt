@@ -1,14 +1,10 @@
-package com.example.snake2
+package com.example.snake2.presenters
 
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Rect
-import com.example.snake2.data.Apple
 import com.example.snake2.data.GameFieldData
 import com.example.snake2.data.GameFieldData.Companion.SIZE
 import com.example.snake2.data.GameFieldData.Companion.STEP
-import com.example.snake2.data.Plug
 import com.example.snake2.data.Snake
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

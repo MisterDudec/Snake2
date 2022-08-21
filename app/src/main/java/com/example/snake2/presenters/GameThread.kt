@@ -1,12 +1,9 @@
-package com.example.snake2.surface
+package com.example.snake2.presenters
 
-import android.content.Context
 import android.graphics.Canvas
 import android.os.SystemClock
 import android.util.Log
 import android.view.SurfaceHolder
-import com.example.snake2.Presenter
-import com.example.snake2.data.GameFieldData
 
 /**
  * Created by Sex_predator on 27.03.2016.

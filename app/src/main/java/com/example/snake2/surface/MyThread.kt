@@ -14,7 +14,7 @@ import com.example.snake2.data.GameFieldData
 class MyThread(private val holder: SurfaceHolder, private val presenter: Presenter) : Thread() {
     private var running = false
     private val maxFrameSkip = 5
-    private val ticksPerSecond = 60
+    private val ticksPerSecond = 30
     private val skipTicks = 1000 / ticksPerSecond
 
     private val getTickCount: Long get() = SystemClock.uptimeMillis()
@@ -31,10 +31,12 @@ class MyThread(private val holder: SurfaceHolder, private val presenter: Present
 
         var drawLoops = 0
         while (running) {
-            while (presenter.isPaused()) {
-                sleep(skipTicks.toLong())
-            }
             var loops = 0
+            while (presenter.isPaused() && getTickCount > nextGameTick && loops < maxFrameSkip) {
+                nextGameTick += skipTicks
+                loops++
+            }
+
             while(getTickCount > nextGameTick && loops < maxFrameSkip) {
                 presenter.updateGame()
                 nextGameTick += skipTicks
@@ -81,24 +83,8 @@ class MyThread(private val holder: SurfaceHolder, private val presenter: Present
         }
     }*/
 
-    /*private fun draw(canvas: Canvas) {
-        //canvas.drawRect
-        val curTime = time - startTime
-        canvas.drawColor(Color.BLACK)
-        val width = canvas.width //1080
-        val height = canvas.height //1904
-
-        val centerX = width / 2
-        val centerY = height / 2
-        val maxSize = (min(width, height) / 2).toFloat()
-        val fraction = (curTime % animationTime).toFloat() / animationTime
-        val color = argbEvaluator.evaluate(fraction, Color.RED, Color.BLACK) as Int
-        paint.color = color
-        canvas.drawCircle(centerX.toFloat(), centerY.toFloat(), maxSize * fraction, paint)
-    }*/
-
     fun dip2px(context: Context, dpValue: Float): Int {
         val scale: Float = context.resources.displayMetrics.density
         return (dpValue * scale + 0.5f).toInt()
-    }
+    } //argbEvaluator
 }

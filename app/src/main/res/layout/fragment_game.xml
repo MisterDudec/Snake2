@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout"
+    android:background="@color/background_surface_view"
     tools:context=".fragments.GameFragment"
     android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_game_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:constraint_referenced_tags="game_buttons"
+        android:visibility="gone"/>
 
     <com.example.snake2.view.GameSurfaceView
         android:id="@+id/surface_view"
@@ -14,42 +23,58 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/bottomButton"
+        app:layout_constraintTag="game_buttons"
         style="@style/controlButtons"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginEnd="72dp"
         android:layout_marginBottom="36dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/leftButton"
+        app:layout_constraintTag="game_buttons"
         style="@style/controlButtons"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginEnd="108dp"
         android:layout_marginBottom="72dp" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/rightButton"
+        app:layout_constraintTag="game_buttons"
         style="@style/controlButtons"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginEnd="36dp"
         android:layout_marginBottom="72dp"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/topButton"
+        app:layout_constraintTag="game_buttons"
         style="@style/controlButtons"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginEnd="72dp"
         android:layout_marginBottom="108dp"  />
 
-
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/speedButton"
+        app:layout_constraintTag="game_buttons"
         style="@style/ruleButtons"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="16dp"
-        android:layout_alignParentStart="true"
         android:background="@color/transparent"
         android:src="@drawable/ic_baseline_fast_forward_24"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/pause"
+        app:layout_constraintTag="game_buttons"
         style="@style/ruleButtons"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="16dp"
@@ -57,4 +82,4 @@
         android:background="@color/transparent"
         android:src="@drawable/ic_baseline_pause_24"/>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

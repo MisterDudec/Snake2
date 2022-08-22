@@ -3,18 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/MainMenuFragment">
-
-    <fragment
-        android:id="@+id/MainMenuFragment"
-        android:name="com.example.snake2.fragments.MainMenuFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_main_menu">
-
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/GameFragment" />
-    </fragment>
+    app:startDestination="@id/GameFragment">
 
     <fragment
         android:id="@+id/GameFragment"
@@ -23,7 +12,19 @@
         tools:layout="@layout/fragment_game">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/action_GameFragment_to_MainMenuFragment"
             app:destination="@id/MainMenuFragment" />
     </fragment>
+
+    <dialog
+        android:id="@+id/MainMenuFragment"
+        android:name="com.example.snake2.fragments.MainMenuFragment"
+        tools:layout="@layout/fragment_main_menu">
+
+        <action
+            android:id="@+id/action_MainMenuFragment_to_GameFragment"
+            app:destination="@id/GameFragment"/>
+    </dialog>
+
+
 </navigation>

@@ -36,23 +36,26 @@ class GameThread(private val holder: SurfaceHolder, private val presenter: Prese
     }
 
     override fun run() {
+        presenter.startGame()
+        runOneTime()
         var canvas: Canvas?
         var nextGameTick = getTickCount
         var interpolation: Float
-        presenter.startGame()
 
         var drawLoops = 0
+        var loops = 0
         while (running) {
-            var loops = 0
-            while (presenter.isPaused() && getTickCount > nextGameTick && loops < maxFrameSkip) {
-                nextGameTick += skipTicks
-                loops++
+            if (presenter.isPaused()) {
+                sleep(skipTicks.toLong())
+                nextGameTick = getTickCount
+                continue
             }
 
+            Log.d("$GameThread", "$getTickCount > $nextGameTick && $loops < $maxFrameSkip")
             while(getTickCount > nextGameTick && loops < maxFrameSkip) {
                 presenter.updateGame()
                 nextGameTick += skipTicks
-                Log.v("$this/run", "loops: $loops")
+                Log.v("$this/run", "updateGame: $loops")
                 loops++
             }
 
@@ -70,7 +73,24 @@ class GameThread(private val holder: SurfaceHolder, private val presenter: Prese
             } finally {
                 if (canvas != null) holder.unlockCanvasAndPost(canvas) //освобождаем canvas
             }
+            loops = 0
         }
     }
 
+    private fun runOneTime() {
+        presenter.updateGame()
+        var canvas: Canvas?
+        canvas = null
+        try {
+            canvas = holder.lockCanvas() //получаем canvas
+            synchronized(holder) {
+                presenter.drawFrame(canvas) //функция рисования //drawFrame(interpolation)
+                Log.v("$this/run", "draw First")
+            }
+        } catch (e: NullPointerException) {
+            e.printStackTrace() //если canvas не доступен
+        } finally {
+            if (canvas != null) holder.unlockCanvasAndPost(canvas) //освобождаем canvas
+        }
+    }
 }

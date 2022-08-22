@@ -6,7 +6,6 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.view.GestureDetectorCompat
-import com.example.snake2.MyGestureListener
 import com.example.snake2.presenters.GameThread
 import com.example.snake2.presenters.Presenter
 
@@ -15,8 +14,7 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     SurfaceView(context, attrs, defStyle), SurfaceHolder.Callback {
     var thread: GameThread? = null
 
-    private val gestureListener = GestureDetectorCompat(this.context, MyGestureListener())
-
+    //private val gestureListener = GestureDetectorCompat(this.context, MyGestureListener())
 
     constructor(context: Context) : this(context, null, 0)
 
@@ -30,10 +28,11 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     }
 
-    fun startGame(presenter: Presenter) {
+    fun prepareGame(presenter: Presenter) {
         thread = GameThread(holder, presenter)
         thread!!.setRunning(true)
         thread!!.start()
+        presenter.pauseGame()
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -54,7 +53,7 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
+   /* override fun onTouchEvent(event: MotionEvent?): Boolean {
         gestureListener.onTouchEvent(event)
         performClick()
         return super.onTouchEvent(event)
@@ -64,5 +63,5 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         super.performClick()
         //doSomething()
         return true
-    }
+    }*/
 }

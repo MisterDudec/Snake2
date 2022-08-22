@@ -36,8 +36,12 @@ class Presenter(
         paint.style = Paint.Style.FILL
     }
 
-    fun pauseResumeGame() {
-        pause = !pause
+    fun resumeGame() {
+        pause = false
+    }
+
+    fun pauseGame() {
+        pause = true
     }
 
     fun isPaused() : Boolean {

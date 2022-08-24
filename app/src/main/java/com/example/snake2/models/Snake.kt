@@ -3,8 +3,8 @@ package com.example.snake2.models
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import com.example.snake2.ui.game.GameFieldData.Companion.SIZE
-import com.example.snake2.ui.game.GameFieldData.Companion.STEP
+import com.example.snake2.ui.game.GameModel.Companion.SIZE
+import com.example.snake2.ui.game.GameModel.Companion.STEP
 import com.example.snake2.ui.game.GameViewModel.Companion.DIR_BOTTOM
 import com.example.snake2.ui.game.GameViewModel.Companion.DIR_LEFT
 import com.example.snake2.ui.game.GameViewModel.Companion.DIR_RIGHT

@@ -11,25 +11,39 @@ import com.example.snake2.ui.game.GameViewModel.Companion.DIR_BOTTOM
 
 import kotlin.random.Random
 
-class GameFieldData(val width: Int, val height: Int) {
+class GameModel {
     private val logTag = "GameFieldData"
     val snake = ArrayList<Snake>()
     val apples = ArrayList<Apple>()
+    private var _width: Int? = null
+    private var _height: Int? = null
+    val width get() = _width!!
+    val height get() = _height!!
+    private var isModelInitialized = false
 
     companion object {
         const val SIZE = 70
-        const val STEP = 10
+        const val STEP = 5
     }
 
+    fun setDimensions(width: Int, height: Int) {
+        _width = width
+        _height = height
+        if (!isModelInitialized) initialize(width, height)
+    }
 
-    init {
+    private fun initialize(width: Int, height: Int) {
         val startLeft = width / 2
-        val startTop = height / 2
-        val rect = Rect(startLeft, startTop,startLeft + SIZE,startTop + SIZE)
+        val startTop = height / 2 + SIZE * 5
+        val rect = Rect(startLeft, startTop, startLeft + SIZE, startTop + SIZE)
         snake.add(Snake(rect, DIR_DEFAULT, 0))
-        repeat(5) {
+        repeat(3) {
             growSnake()
         }
+        repeat(3) {
+            addApple()
+        }
+        isModelInitialized = true
     }
 
     private fun growSnake() {

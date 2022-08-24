@@ -3,62 +3,28 @@ package com.example.snake2.view
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
+import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
-import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.example.snake2.R
-import com.example.snake2.ui.game.GameFieldData
-import com.example.snake2.ui.game.GameThread
+import com.example.snake2.ui.game.GameModel
 
 
 class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
-    SurfaceView(context, attrs, defStyle), SurfaceHolder.Callback {
-    var thread: GameThread? = null
+    SurfaceView(context, attrs, defStyle) {
     val paint = Paint()
-    private val backgroundColor: Int
-    private var snakeColor: Int
-    private var appleColor: Int
-
-    //private val gestureListener = GestureDetectorCompat(this.context, MyGestureListener())
-
-    constructor(context: Context) : this(context, null, 0)
-
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    private val backgroundColor = context.getColor(R.color.background_surface_view)
+    private var snakeColor = context.getColor(R.color.snake)
+    private var appleColor = context.getColor(R.color.apple)
 
     init {
         paint.isAntiAlias = true
         paint.style = Paint.Style.FILL
-        backgroundColor = context.getColor(R.color.background_surface_view)
-        snakeColor = context.getColor(R.color.snake)
-        appleColor = context.getColor(R.color.apple)
-        holder.addCallback(this)
     }
 
-
-
-    override fun surfaceCreated(holder: SurfaceHolder) { //вызывается, когда surfaceView появляется на экране
-
-    }
-
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-
-    }
-
-    override fun surfaceDestroyed(holder: SurfaceHolder) { //когда view исчезает из поля зрения
-        var retry = true
-        thread?.setRunning(false) //останавливает процесс
-        while (retry) {
-            try {
-                thread?.join() //ждет окончательной остановки процесса
-                retry = false
-            } catch (e: InterruptedException) {
-                e.printStackTrace()//не более чем формальность
-            }
-        }
-    }
-
-    fun drawFrame(gameFieldData: GameFieldData) {
+    fun drawFrame(gameFieldData: GameModel) {
+        Log.d("threads", "drawFrame: ${Looper.myLooper()}")
         var canvas: Canvas?
         canvas = null
         try {
@@ -74,7 +40,9 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         }
     }
 
-    private fun drawFrame(canvas: Canvas, gameFieldData: GameFieldData) {
+    private fun drawFrame(canvas: Canvas, gameFieldData: GameModel) {
+        Log.d("threads", "drawFrame(): ${Looper.myLooper()}")
+
         canvas.drawColor(backgroundColor)
 
         paint.color = appleColor
@@ -86,20 +54,11 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
             canvas.drawRect(s.rect, paint)
     }
 
-    /*fun pause() {
-        mRunning = false
-        try {
-            // Stop the thread (rejoin the main thread)
-            mGameThread.join()
-        } catch (e: InterruptedException) {
-        }
-    }
+    constructor(context: Context) : this(context, null, 0)
 
-    fun resume() {
-        mRunning = true
-        mGameThread = Thread(this)
-        mGameThread.start()
-    }*/
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+
+    //private val gestureListener = GestureDetectorCompat(this.context, MyGestureListener())
 
    /* override fun onTouchEvent(event: MotionEvent?): Boolean {
         gestureListener.onTouchEvent(event)

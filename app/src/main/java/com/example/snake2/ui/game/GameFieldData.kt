@@ -1,18 +1,20 @@
-package com.example.snake2.data
+package com.example.snake2.ui.game
 
 import android.graphics.Rect
 import android.util.Log
-import com.example.snake2.presenters.Presenter.Companion.DIR_BOTTOM
-import com.example.snake2.presenters.Presenter.Companion.DIR_DEFAULT
-import com.example.snake2.presenters.Presenter.Companion.DIR_RIGHT
-import com.example.snake2.presenters.Presenter.Companion.DIR_TOP
+import com.example.snake2.models.Apple
+import com.example.snake2.models.Snake
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_DEFAULT
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_TOP
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_RIGHT
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_BOTTOM
+
 import kotlin.random.Random
 
 class GameFieldData(val width: Int, val height: Int) {
     private val logTag = "GameFieldData"
     val snake = ArrayList<Snake>()
     val apples = ArrayList<Apple>()
-    var selfEating = false
 
     companion object {
         const val SIZE = 70

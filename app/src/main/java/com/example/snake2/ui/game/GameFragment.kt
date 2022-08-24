@@ -1,20 +1,25 @@
-package com.example.snake2.fragments
+package com.example.snake2.ui.game
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.HapticFeedbackConstants
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.fragment.findNavController
 import com.example.snake2.R
-import com.example.snake2.data.GameFieldData
 import com.example.snake2.databinding.FragmentGameBinding
-import com.example.snake2.presenters.Presenter
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_BOTTOM
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_LEFT
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_RIGHT
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_TOP
 
 
 /**
@@ -25,7 +30,9 @@ import com.example.snake2.presenters.Presenter
 class GameFragment : Fragment() {
     private var _binding: FragmentGameBinding? = null
     private val binding get() = _binding!!
-    var p: Presenter? = null
+    //var p: Presenter? = null //toDelete
+
+    private val viewModel by viewModels<GameViewModel>()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
@@ -36,88 +43,94 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ((activity as AppCompatActivity?)!!.supportActionBar)?.hide()
-
-        binding.surfaceView.post { //post is necessary to wait till drawing phase of view and get actual dimensions
-            val presenter = prepareGame(view)
-            p = presenter
-            Log.d("GameFragment", "post")
+        viewModel.liveData.observe(viewLifecycleOwner) {
+            binding.surfaceView.drawFrame(it)
+            Log.d("test", "top = ${it.snake[0].rect.top}")
         }
-    }
-    private fun prepareGame(view: View) : Presenter {
-        val backgroundColor = view.context.getColor(R.color.background_surface_view)
-        val snakeColor = view.context.getColor(R.color.snake)
-        val appleColor = view.context.getColor(R.color.apple)
-        val presenter = Presenter(
-            GameFieldData(view.measuredWidth, view.measuredHeight),
-            backgroundColor,
-            snakeColor,
-            appleColor
-        )
 
-        binding.surfaceView.prepareGame(presenter)
-        setButtons(presenter)
+        setButtons()
+    }
+
+    override fun onStart() {
+        super.onStart()
+    }
+
+    private fun prepareGame(view: View) {
+        //viewModel.setDimensions()
+
+//        binding.surfaceView.prepareGame(presenter)
+        //setButtons(presenter)
         findNavController().navigate(R.id.action_GameFragment_to_MainMenuFragment)
 
         val navBackStackEntry = findNavController().getBackStackEntry(R.id.MainMenuFragment)
 
         navBackStackEntry.lifecycle.addObserver(LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_DESTROY) {
-                p?.let { startGame(it) }
+//                p?.let { startGame(it) }
                 Log.d("GameFragment", "dialog destroyed")
             }
         })
-        return presenter
     }
 
-    private fun startGame(presenter: Presenter) {
-        binding.groupGameButtons.visibility = View.VISIBLE
-        presenter.resumeGame()
-    }
-
-    private fun setButtons(presenter: Presenter) {
+    private fun setButtons() {
         binding.topButton.setOnClickListener {
-            presenter.changeDirection(Presenter.DIR_TOP)
+            viewModel.changeDirection(DIR_TOP)
             click(it)
         }
         binding.rightButton.setOnClickListener {
-            presenter.changeDirection(Presenter.DIR_RIGHT)
+            viewModel.changeDirection(DIR_RIGHT)
             click(it)
         }
         binding.bottomButton.setOnClickListener {
-            presenter.changeDirection(Presenter.DIR_BOTTOM)
+            viewModel.changeDirection(DIR_BOTTOM)
             click(it)
         }
         binding.leftButton.setOnClickListener {
-            presenter.changeDirection(Presenter.DIR_LEFT)
+            viewModel.changeDirection(DIR_LEFT)
             click(it)
         }
         binding.pause.setOnClickListener {
-            if (!presenter.isPaused()) {
-                //(it as AppCompatImageButton).setImageResource(R.drawable.ic_baseline_play_arrow_24)
-                presenter.pauseGame()
-                findNavController().navigate(R.id.action_GameFragment_to_MainMenuFragment)
-                binding.groupGameButtons.visibility = View.INVISIBLE
-                val navBackStackEntry = findNavController().getBackStackEntry(R.id.MainMenuFragment)
-
-                navBackStackEntry.lifecycle.addObserver(LifecycleEventObserver { _, event ->
-                    if (event == Lifecycle.Event.ON_DESTROY) {
-                        p?.let { startGame(it) }
-                        Log.d("GameFragment", "dialog destroyed")
-                    }
-                })
-            } else {
-                //(it as AppCompatImageButton).setImageResource(R.drawable.ic_baseline_pause_24)
-                presenter.resumeGame()
-            }
-            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_out))
+            pauseGame(it)
         }
         binding.speedButton.setOnClickListener {
-            binding.surfaceView.thread?.changeTicks()
+            //viewModel.thread.changeTicks()
             click(it)
         }
     }
+
+    fun pauseGame(it: View) {
+        if (!viewModel.isPaused()) {
+            (it as AppCompatImageButton).setImageResource(R.drawable.ic_baseline_play_arrow_24)
+            viewModel.pauseGame()
+            /*findNavController().navigate(R.id.action_GameFragment_to_MainMenuFragment)
+            binding.groupGameButtons.visibility = View.INVISIBLE
+            val navBackStackEntry = findNavController().getBackStackEntry(R.id.MainMenuFragment)
+
+            navBackStackEntry.lifecycle.addObserver(LifecycleEventObserver { _, event ->
+                if (event == Lifecycle.Event.ON_DESTROY) {
+                    Log.d("GameFragment", "dialog destroyed")
+                    if (p != null) {
+                        p!!.startGame()
+                        Log.d("GameFragment", "dialog destroyed")
+                    } else {
+                        Log.d("GameFragment", "presenter is null")
+                    }
+                    //p?.let { startGame(it) }
+                }
+            })*/
+        } else {
+            (it as AppCompatImageButton).setImageResource(R.drawable.ic_baseline_pause_24)
+            viewModel.resumeGame()
+        }
+        it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+        it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_out))
+    }
+
+    /*
+    private fun startGame(presenter: Presenter) {
+        binding.groupGameButtons.visibility = View.VISIBLE
+        presenter.resumeGame()
+    }*/
 
     private fun click(it: View) {
         it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
@@ -139,7 +152,7 @@ class GameFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.d("GameFragment", "resume")
-        p?.let { startGame(it) }
+       // p?.let { startGame(it) }
         //binding.surfaceView.onResume()
     }
 }

@@ -1,14 +1,13 @@
-package com.example.snake2.presenters
+package com.example.snake2.ui.game
 
 import android.graphics.Canvas
 import android.os.SystemClock
 import android.util.Log
-import android.view.SurfaceHolder
 
 /**
  * Created by Sex_predator on 27.03.2016.
  */
-class GameThread(private val holder: SurfaceHolder, private val presenter: Presenter) : Thread() {
+class GameThread(private val viewModel: GameViewModel) : Thread() {
     private var running = false
     private val maxFrameSkip = 5
     private var ticksPerSecond = TICKS_30
@@ -36,49 +35,29 @@ class GameThread(private val holder: SurfaceHolder, private val presenter: Prese
     }
 
     override fun run() {
-        presenter.startGame()
         runOneTime()
-        var canvas: Canvas?
         var nextGameTick = getTickCount
-        var interpolation: Float
-
-        var drawLoops = 0
-        var loops = 0
         while (running) {
-            if (presenter.isPaused()) {
+            var loops = 0
+
+            while (viewModel.isPaused()) {
                 sleep(skipTicks.toLong())
                 nextGameTick = getTickCount
-                continue
+                loops++
             }
 
-            Log.d("$GameThread", "$getTickCount > $nextGameTick && $loops < $maxFrameSkip")
+            Log.v("$GameThread", "$getTickCount > $nextGameTick && $loops < $maxFrameSkip")
             while(getTickCount > nextGameTick && loops < maxFrameSkip) {
-                presenter.updateGame()
+                viewModel.updateGame()
                 nextGameTick += skipTicks
                 Log.v("$this/run", "updateGame: $loops")
                 loops++
             }
-
-            interpolation = (getTickCount + skipTicks - nextGameTick).toFloat() // float( SKIP_TICKS );
-            canvas = null
-            try {
-                canvas = holder.lockCanvas() //получаем canvas
-                synchronized(holder) {
-                    presenter.drawFrame(canvas) //функция рисования //drawFrame(interpolation)
-                    Log.v("$this/run", "draw: $drawLoops")
-                    drawLoops++
-                }
-            } catch (e: NullPointerException) {
-                e.printStackTrace() //если canvas не доступен
-            } finally {
-                if (canvas != null) holder.unlockCanvasAndPost(canvas) //освобождаем canvas
-            }
-            loops = 0
         }
     }
 
     private fun runOneTime() {
-        presenter.updateGame()
+        /*viewModel.updateGame()
         var canvas: Canvas?
         canvas = null
         try {
@@ -91,6 +70,6 @@ class GameThread(private val holder: SurfaceHolder, private val presenter: Prese
             e.printStackTrace() //если canvas не доступен
         } finally {
             if (canvas != null) holder.unlockCanvasAndPost(canvas) //освобождаем canvas
-        }
+        }*/
     }
 }

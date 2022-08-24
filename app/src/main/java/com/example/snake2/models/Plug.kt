@@ -1,4 +1,4 @@
-package com.example.snake2.data
+package com.example.snake2.models
 
 import android.graphics.Rect
 

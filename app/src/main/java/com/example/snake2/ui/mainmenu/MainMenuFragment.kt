@@ -1,4 +1,4 @@
-package com.example.snake2.fragments
+package com.example.snake2.ui.mainmenu
 
 import android.os.Bundle
 import android.view.HapticFeedbackConstants

@@ -1,11 +1,14 @@
-package com.example.snake2.data
+package com.example.snake2.models
 
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import com.example.snake2.presenters.Presenter
-import com.example.snake2.data.GameFieldData.Companion.SIZE
-import com.example.snake2.data.GameFieldData.Companion.STEP
+import com.example.snake2.ui.game.GameFieldData.Companion.SIZE
+import com.example.snake2.ui.game.GameFieldData.Companion.STEP
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_BOTTOM
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_LEFT
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_RIGHT
+import com.example.snake2.ui.game.GameViewModel.Companion.DIR_TOP
 import org.jetbrains.annotations.TestOnly
 
 data class Snake(override val rect: Rect, var direction: Int, val index: Int) : Cell (rect) {
@@ -93,10 +96,10 @@ data class Snake(override val rect: Rect, var direction: Int, val index: Int) : 
     fun onChangedDirection() {
         turning = false
         when (direction) {
-            Presenter.DIR_TOP -> rect.bottom = rect.top + SIZE
-            Presenter.DIR_RIGHT -> rect.left = rect.right - SIZE
-            Presenter.DIR_BOTTOM -> rect.top = rect.bottom - SIZE
-            Presenter.DIR_LEFT -> rect.right = rect.left + SIZE
+            DIR_TOP -> rect.bottom = rect.top + SIZE
+            DIR_RIGHT -> rect.left = rect.right - SIZE
+            DIR_BOTTOM -> rect.top = rect.bottom - SIZE
+            DIR_LEFT -> rect.right = rect.left + SIZE
         }
     }
 

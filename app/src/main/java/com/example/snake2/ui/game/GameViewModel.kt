@@ -1,21 +1,23 @@
 package com.example.snake2.ui.game
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.snake2.models.Snake
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class GameViewModel() : ViewModel() {
-    val liveData: MutableLiveData<GameModel> = MutableLiveData() //TODO liveDataGet: LiveData<GameFieldData> = liveData
+    //val liveData: MutableLiveData<GameModel> = MutableLiveData() //TODO liveDataGet: LiveData<GameFieldData> = liveData
     private val model: GameModel = GameModel()
     private val thread: GameThread = GameThread(this)
 
-    var pause = true
+    private val _modelFlow = MutableSharedFlow<GameModel>(replay = 1, onBufferOverflow = BufferOverflow.DROP_OLDEST)
+    val modelFlow get() = _modelFlow
+
+    private var pause = true
 
     companion object {
         const val DIR_STOP = -1
@@ -31,9 +33,8 @@ class GameViewModel() : ViewModel() {
 
     }
 
-    fun setDimensions(width: Int, height: Int) {
+    fun configure(width: Int, height: Int) {
         model.setDimensions(width, height)
-        liveData.value = model
     }
 
     fun startGame()  {
@@ -47,7 +48,7 @@ class GameViewModel() : ViewModel() {
         }
         checkSnakeCollision()
         checkAppleCollision()
-        liveData.postValue(model)
+        _modelFlow.tryEmit(model)
     }
 
     private fun Snake.move(index: Int) {

@@ -9,6 +9,9 @@ import android.view.animation.AnimationUtils
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.snake2.databinding.FragmentGameBinding
 import com.example.snake2.ui.game.GameViewModel.Companion.DIR_BOTTOM
 import com.example.snake2.ui.game.GameViewModel.Companion.DIR_LEFT
@@ -17,6 +20,7 @@ import com.example.snake2.ui.game.GameViewModel.Companion.DIR_TOP
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 
 /**
@@ -56,26 +60,40 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("threads", "onViewCreated: ${Looper.myLooper()}")
 
+
         val callback = object : SurfaceHolder.Callback {
-
-
-            override fun surfaceCreated(p0: SurfaceHolder) {
+            override fun surfaceCreated(holder: SurfaceHolder) {
                 Log.d("threads", "surfaceCreated: ${Looper.myLooper()}")
-                viewModel.setDimensions(binding.surfaceView.width, binding.surfaceView.height)
-                viewModel.liveData.observe(viewLifecycleOwner) {
-                    Log.d("observe", "onViewCreated looper: ${Looper.myLooper()}")
-                    CoroutineScope(Dispatchers.Unconfined).launch {
-                        binding.surfaceView.drawFrame(it)
+
+                viewModel.configure(
+                    binding.surfaceView.width,
+                    binding.surfaceView.height
+                )
+
+                lifecycleScope.launch {
+                    lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        viewModel.modelFlow.collect { model ->
+                            binding.surfaceView.drawFrame(model)
+                            binding.appleCounter.text = model.appleCounter.toString()
+                            binding.liveCounter.text = model.liveCounter.toInt().toString()
+                        }
                     }
-                    binding.appleCounter.text = it.appleCounter.toString()
-                    binding.liveCounter.text = it.liveCounter.toInt().toString()
                 }
+
                 viewModel.startGame()
             }
-            override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
-
+            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+                /*viewModel.configure(
+                    width,
+                    height
+                )*/
             }
-            override fun surfaceDestroyed(p0: SurfaceHolder) {
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+                /*pauseGame()
+                viewModel.configure(
+                    binding.surfaceView.width,
+                    binding.surfaceView.height
+                )*/
             }
         }
 

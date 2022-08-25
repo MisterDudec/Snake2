@@ -9,6 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#00000000</color>
 
+    <color name="green_a700_dark">#009624</color>
+    <color name="green_a700_primary">#00c853</color>
+    <color name="red_a700_light">#ff5131</color>
+
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
@@ -16,8 +21,8 @@
     <color name="mainAppText">#ffffff</color>
 
     <color name="background_surface_view">#FBFCF6</color>
-    <color name="snake">#00ff00</color>
-    <color name="apple">#ff0d00</color>
+    <color name="snake">@color/green_a700_dark</color>
+    <color name="apple">@color/red_a700_light</color>
 
     <color name="purple_500a">#5E00E4</color>
     <color name="grey">#EBEBEB</color>
@@ -54,4 +59,5 @@
     <color name="seven">#058405</color>
     <color name="eight">#aea758</color>
     <color name="nine">#a93500</color>
+    <color name="heart">#F44336</color>
 </resources>

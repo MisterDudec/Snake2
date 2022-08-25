@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/layout"
     android:background="@color/background_surface_view"
+    android:orientation="vertical"
     tools:context=".ui.game.GameFragment"
-    android:orientation="vertical">
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/group_game_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible"
-        app:constraint_referenced_tags="game_buttons" />
+    tools:ignore="MissingConstraints">
 
     <com.example.snake2.view.GameSurfaceView
         android:id="@+id/surface_view"
@@ -22,76 +16,139 @@
         android:layout_height="match_parent"
         tools:foreground="@drawable/main_background_light"/>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/bottomButton"
-        app:layout_constraintTag="game_buttons"
-        style="@style/controlButtons"
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group_game_buttons"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:constraint_referenced_tags="game_buttons"
+        tools:visibility="visible" />
+
+    <ImageView
+        android:id="@+id/heart_icon"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:src="@drawable/ic_heart"
+        android:alpha="0.5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp" />
+
+    <ImageView
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:src="@drawable/apple"
+        android:alpha="0.5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/heart_icon"
+        android:layout_marginTop="16dp" />
+
+    <TextView
+        android:id="@+id/live_counter"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1" />
+
+    <TextView
+        android:id="@+id/apple_counter"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
+        app:layout_constraintStart_toEndOf="@id/live_counter"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="0"
+        android:gravity="center"
+        android:textColor="@color/white"
+        app:layout_constraintBaseline_toBaselineOf="@id/live_counter"
+        android:textSize="24sp"/>
+
+    <View
+        android:id="@+id/point"
+        android:visibility="invisible"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:layout_margin="96dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="72dp"
-        android:layout_marginBottom="36dp"/>
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/leftButton"
-        app:layout_constraintTag="game_buttons"
+        android:id="@+id/bottomButton"
         style="@style/controlButtons"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="108dp"
-        android:layout_marginBottom="72dp" />
+        app:layout_constraintCircle="@+id/point"
+        app:layout_constraintCircleRadius="@dimen/radius"
+        app:layout_constraintCircleAngle="180"
+        android:rotation="135"
+        app:layout_constraintTag="game_buttons" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/rightButton"
-        app:layout_constraintTag="game_buttons"
         style="@style/controlButtons"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="36dp"
-        android:layout_marginBottom="72dp"/>
+        app:layout_constraintCircle="@+id/point"
+        app:layout_constraintCircleRadius="@dimen/radius"
+        app:layout_constraintCircleAngle="90"
+        android:rotation="45"
+        app:layout_constraintTag="game_buttons" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/leftButton"
+        style="@style/controlButtons"
+        app:layout_constraintCircle="@+id/point"
+        app:layout_constraintCircleRadius="@dimen/radius"
+        app:layout_constraintCircleAngle="270"
+        android:rotation="225"
+        app:layout_constraintTag="game_buttons" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/topButton"
-        app:layout_constraintTag="game_buttons"
         style="@style/controlButtons"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginEnd="72dp"
-        android:layout_marginBottom="108dp"  />
+        app:layout_constraintCircle="@+id/point"
+        app:layout_constraintCircleRadius="@dimen/radius"
+        app:layout_constraintCircleAngle="0"
+        android:rotation="315"
+        app:layout_constraintTag="game_buttons" />
+
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/speedButton"
-        app:layout_constraintTag="game_buttons"
         style="@style/ruleButtons"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_margin="16dp"
         android:background="@color/transparent"
-        android:src="@drawable/ic_baseline_fast_forward_24"/>
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTag="game_buttons"
+        app:layout_constraintBottom_toBottomOf="parent" />
+    <!--android:src="@drawable/ic_baseline_fast_forward_24"-->
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/pause"
-        app:layout_constraintTag="game_buttons"
         style="@style/ruleButtons"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_margin="16dp"
         android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
         android:background="@color/transparent"
-        android:src="@drawable/ic_baseline_pause_24"/>
+        android:src="@drawable/ic_baseline_pause_24"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTag="game_buttons"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/start_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_baseline_play_arrow_96"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@color/transparent"
-        android:src="@drawable/ic_baseline_play_arrow_96"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

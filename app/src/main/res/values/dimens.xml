@@ -1,3 +1,12 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="button">64dp</dimen>
+
+    <dimen name="point">108dp</dimen>
+
+    <dimen name="radius">48dp</dimen>
+
+    <dimen name="guide">80dp</dimen>
+    <dimen name="icon_size">64dp</dimen>
 </resources>

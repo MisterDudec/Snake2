@@ -21,9 +21,12 @@ class GameModel {
     val height get() = _height!!
     private var isModelInitialized = false
 
+    var appleCounter = 0
+    var liveCounter: Float = 1f
+
     companion object {
-        const val SIZE = 70
-        const val STEP = 5
+        const val SIZE = 40
+        const val STEP = 10
     }
 
     fun setDimensions(width: Int, height: Int) {
@@ -119,12 +122,16 @@ class GameModel {
                 addApple()
             }
         }
+        appleCounter++
+        liveCounter += 0.25f
     }
 
-    fun snakeEaten(s: Int) {
+    fun snakeEaten(s: Int) : Boolean {
         for(i in snake.size - 1 downTo s){
             snake.removeAt(i)
+            liveCounter--
         }
+        return liveCounter < 0
     }
 
     private fun printLogs(t: Int, r: Int, b: Int, l: Int) {

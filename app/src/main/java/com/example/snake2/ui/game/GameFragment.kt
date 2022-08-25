@@ -14,6 +14,9 @@ import com.example.snake2.ui.game.GameViewModel.Companion.DIR_BOTTOM
 import com.example.snake2.ui.game.GameViewModel.Companion.DIR_LEFT
 import com.example.snake2.ui.game.GameViewModel.Companion.DIR_RIGHT
 import com.example.snake2.ui.game.GameViewModel.Companion.DIR_TOP
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 /**
@@ -54,12 +57,18 @@ class GameFragment : Fragment() {
         Log.d("threads", "onViewCreated: ${Looper.myLooper()}")
 
         val callback = object : SurfaceHolder.Callback {
+
+
             override fun surfaceCreated(p0: SurfaceHolder) {
                 Log.d("threads", "surfaceCreated: ${Looper.myLooper()}")
                 viewModel.setDimensions(binding.surfaceView.width, binding.surfaceView.height)
                 viewModel.liveData.observe(viewLifecycleOwner) {
                     Log.d("observe", "onViewCreated looper: ${Looper.myLooper()}")
-                    binding.surfaceView.drawFrame(it)
+                    CoroutineScope(Dispatchers.Unconfined).launch {
+                        binding.surfaceView.drawFrame(it)
+                    }
+                    binding.appleCounter.text = it.appleCounter.toString()
+                    binding.liveCounter.text = it.liveCounter.toInt().toString()
                 }
                 viewModel.startGame()
             }

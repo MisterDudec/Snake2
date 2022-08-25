@@ -32,11 +32,12 @@
     </style>
 
     <style name="controlButtons">
-        <item name="android:layout_width">48dp</item>
-        <item name="android:layout_height">48dp</item>
-        <item name="android:rotation">45</item>
-        <item name="android:background">@color/command_button_background</item>
-        <item name="android:alpha">0.5</item>
+        <item name="android:layout_width">@dimen/button</item>
+        <item name="android:layout_height">@dimen/button</item>
+        <item name="android:foreground">@drawable/button</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:alpha">0.3</item>
         <item name="android:layout_alignParentBottom">true</item>
         <item name="android:layout_alignParentEnd">true</item>
     </style>

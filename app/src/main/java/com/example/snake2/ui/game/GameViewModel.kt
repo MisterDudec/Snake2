@@ -27,6 +27,10 @@ class GameViewModel() : ViewModel() {
         //var direction = DIR_TOP
     }
 
+    fun gameOver() {
+
+    }
+
     fun setDimensions(width: Int, height: Int) {
         model.setDimensions(width, height)
         liveData.value = model
@@ -85,7 +89,11 @@ class GameViewModel() : ViewModel() {
             }
             if (a != null) break
         }
-        if (a != null) model.snakeEaten(a!!)
+        if (a != null) {
+            if (model.snakeEaten(a!!)) {
+                gameOver()
+            }
+        }
     }
 
     fun changeDirection(dir: Int) {

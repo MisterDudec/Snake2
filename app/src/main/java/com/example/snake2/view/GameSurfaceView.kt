@@ -49,7 +49,7 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     private fun drawFrame(canvas: Canvas, gameFieldData: GameModel) {
         Log.d("threads", "drawFrame(): ${Looper.myLooper()}")
-        if (canvas == null) return
+
         canvas.drawColor(backgroundColor)
 
         paint.color = appleColor
@@ -74,15 +74,15 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     //private val gestureListener = GestureDetectorCompat(this.context, MyGestureListener())
 
-   /* override fun onTouchEvent(event: MotionEvent?): Boolean {
-        gestureListener.onTouchEvent(event)
-        performClick()
-        return super.onTouchEvent(event)
-    }
+    /* override fun onTouchEvent(event: MotionEvent?): Boolean {
+         gestureListener.onTouchEvent(event)
+         performClick()
+         return super.onTouchEvent(event)
+     }
 
-    override fun performClick(): Boolean {
-        super.performClick()
-        //doSomething()
-        return true
-    }*/
+     override fun performClick(): Boolean {
+         super.performClick()
+         //doSomething()
+         return true
+     }*/
 }

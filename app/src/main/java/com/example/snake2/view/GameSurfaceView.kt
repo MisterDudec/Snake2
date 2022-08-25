@@ -30,7 +30,7 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         paint.style = Paint.Style.FILL
     }
 
-    fun drawFrame(gameFieldData: GameModel) {
+    suspend fun drawFrame(gameFieldData: GameModel) {
         Log.d("threads", "drawFrame: ${Looper.myLooper()}")
         var canvas: Canvas?
         canvas = null

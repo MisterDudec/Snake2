@@ -1,7 +1,5 @@
 package com.example.snake2.ui.game
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.snake2.models.Snake
@@ -27,10 +25,6 @@ class GameViewModel() : ViewModel() {
         //var direction = DIR_TOP
     }
 
-    fun gameOver() {
-
-    }
-
     fun setDimensions(width: Int, height: Int) {
         model.setDimensions(width, height)
         liveData.value = model
@@ -39,6 +33,16 @@ class GameViewModel() : ViewModel() {
     fun startGame()  {
         thread.setRunning(true)
         thread.start()
+    }
+
+    fun gameOver() {
+        pauseGame()
+        model.gameOver()
+    }
+
+    fun restartGame() {
+        model.restartGame()
+        resumeGame()
     }
 
     fun updateGame() {
@@ -78,19 +82,19 @@ class GameViewModel() : ViewModel() {
     }
 
     private fun checkSnakeCollision() {
-        var a: Int? = null
+        var eatenRect: Int? = null
 
         for (i in 4 until model.snake.size) {
             val s = model.snake[i]
 
             with (model.snake[0].rect) {
                 val b1 = s.rect.intersect(left, top, right, bottom)
-                if (b1) a = i
+                if (b1) eatenRect = i
             }
-            if (a != null) break
+            if (eatenRect != null) break
         }
-        if (a != null) {
-            if (model.snakeEaten(a!!)) {
+        if (eatenRect != null) {
+            if (model.snakeEaten(eatenRect!!)) {
                 gameOver()
             }
         }
@@ -107,12 +111,11 @@ class GameViewModel() : ViewModel() {
                     DIR_LEFT -> if (dir == DIR_RIGHT) return@launch
                 }
                 while (turning || isTransition()) {
-                    delay(10)
+                    delay(1)
                 }
-                //with (rect) { gameFieldData.turns.add(Plug(Rect(left, top, right, bottom), 0)) }
                 changeDirection(dir)
             }
-        } //val changeDirectionJob: Job =
+        }
     }
 
     fun resumeGame() {

@@ -2,6 +2,7 @@ package com.example.snake2.ui.game
 
 import android.graphics.Rect
 import android.util.Log
+import com.example.snake2.data.Config
 import com.example.snake2.models.Apple
 import com.example.snake2.models.Snake
 import com.example.snake2.ui.game.GameViewModel.Companion.DIR_DEFAULT
@@ -15,6 +16,7 @@ class GameModel {
     private val logTag = "GameFieldData"
     val snake = ArrayList<Snake>()
     val apples = ArrayList<Apple>()
+
     private var _width: Int? = null
     private var _height: Int? = null
     val width get() = _width!!
@@ -24,6 +26,9 @@ class GameModel {
     var appleCounter = 0
     var liveCounter: Float = 1f
 
+    private var _gameOver = false
+    val gameOver get() = _gameOver
+
     companion object {
         const val SIZE = 40
         const val STEP = 10
@@ -32,21 +37,30 @@ class GameModel {
     fun setDimensions(width: Int, height: Int) {
         _width = width
         _height = height
-        if (!isModelInitialized) initialize(width, height)
+        if (!isModelInitialized) initialize()
     }
 
-    private fun initialize(width: Int, height: Int) {
+    private fun initialize() {
         val startLeft = width / 2
         val startTop = height / 2 + SIZE * 5
         val rect = Rect(startLeft, startTop, startLeft + SIZE, startTop + SIZE)
         snake.add(Snake(rect, DIR_DEFAULT, 0))
-        repeat(3) {
+        repeat(Config.START_SNAKE_LENGTH - 1) {
             growSnake()
         }
-        repeat(3) {
+        repeat(Config.START_APPLE) {
             addApple()
         }
         isModelInitialized = true
+    }
+
+    fun restartGame() {
+        _gameOver = false
+        snake.removeAll(snake.toSet())
+        apples.removeAll(apples.toSet())
+        appleCounter = 0
+        liveCounter = 1f
+        initialize()
     }
 
     private fun growSnake() {
@@ -132,6 +146,10 @@ class GameModel {
             liveCounter--
         }
         return liveCounter < 0
+    }
+
+    fun gameOver() {
+        _gameOver = true
     }
 
     private fun printLogs(t: Int, r: Int, b: Int, l: Int) {

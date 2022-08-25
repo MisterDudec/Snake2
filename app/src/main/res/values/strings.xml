@@ -19,5 +19,6 @@
     <string name="pref_uncensoredmod">HlebaloMod</string>
     <string name="pref_snakeBody">SnakeBody</string>
     <string name="pref_cherries">Cherries</string>
+    <string name="game_over">Game Over</string>
 
 </resources>

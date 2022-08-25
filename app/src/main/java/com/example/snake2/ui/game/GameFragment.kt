@@ -31,6 +31,11 @@ class GameFragment : Fragment() {
 
     private val viewModel by viewModels<GameViewModel>()
 
+    sealed class State {
+        class Pause : State()
+        class Play : State()
+        class GameOver : State()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,31 +56,31 @@ class GameFragment : Fragment() {
         return binding.root
     }
 
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("threads", "onViewCreated: ${Looper.myLooper()}")
 
         val callback = object : SurfaceHolder.Callback {
-
-
-            override fun surfaceCreated(p0: SurfaceHolder) {
+            override fun surfaceCreated(holder: SurfaceHolder) {
                 Log.d("threads", "surfaceCreated: ${Looper.myLooper()}")
+
                 viewModel.setDimensions(binding.surfaceView.width, binding.surfaceView.height)
                 viewModel.liveData.observe(viewLifecycleOwner) {
                     Log.d("observe", "onViewCreated looper: ${Looper.myLooper()}")
+
                     CoroutineScope(Dispatchers.Unconfined).launch {
                         binding.surfaceView.drawFrame(it)
                     }
                     binding.appleCounter.text = it.appleCounter.toString()
                     binding.liveCounter.text = it.liveCounter.toInt().toString()
+                    if (it.gameOver) showGameOverScreen()
                 }
                 viewModel.startGame()
             }
-            override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
-
+            override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+                viewModel.setDimensions(binding.surfaceView.width, binding.surfaceView.height)
             }
-            override fun surfaceDestroyed(p0: SurfaceHolder) {
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
+
             }
         }
 
@@ -87,52 +92,83 @@ class GameFragment : Fragment() {
 
     private fun resumeGame() {
         viewModel.resumeGame()
-        binding.groupGameButtons.visibility = View.VISIBLE
-        binding.startGame.visibility = View.GONE
+        showScreen(State.Play())
     }
 
-    fun pauseGame() {
+    private fun pauseGame() {
         viewModel.pauseGame()
-        binding.groupGameButtons.visibility = View.INVISIBLE
-        binding.startGame.visibility = View.VISIBLE
+        showScreen(State.Pause())
     }
+
+    private fun showGameOverScreen() {
+        showScreen(State.GameOver())
+    }
+
+    private fun restartGame() {
+        viewModel.restartGame()
+        showScreen(State.Play())
+    }
+
+    private fun showScreen(state: State) {
+        binding.groupGameButtons.visibility = View.GONE
+        binding.groupGameOverButtons.visibility = View.GONE
+        binding.startGame.visibility = View.GONE
+
+        when (state) {
+            is State.Pause -> binding.startGame.visibility = View.VISIBLE
+            is State.Play -> binding.groupGameButtons.visibility = View.VISIBLE
+            is State.GameOver -> binding.groupGameOverButtons.visibility = View.VISIBLE
+        }
+    }
+
 
     private fun setButtons() {
-        binding.topButton.setOnClickListener {
-            viewModel.changeDirection(DIR_TOP)
-            click(it)
-        }
-        binding.rightButton.setOnClickListener {
-            viewModel.changeDirection(DIR_RIGHT)
-            click(it)
-        }
-        binding.bottomButton.setOnClickListener {
-            viewModel.changeDirection(DIR_BOTTOM)
-            click(it)
-        }
-        binding.leftButton.setOnClickListener {
-            viewModel.changeDirection(DIR_LEFT)
-            click(it)
-        }
+        binding.topButton.directionButtonSetOnTouchListener(DIR_TOP)
+        binding.rightButton.directionButtonSetOnTouchListener(DIR_RIGHT)
+        binding.bottomButton.directionButtonSetOnTouchListener(DIR_BOTTOM)
+        binding.leftButton.directionButtonSetOnTouchListener(DIR_LEFT)
+
         binding.pause.setOnClickListener {
-            pauseGame()
-            it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-            it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_out))
-        }
-        binding.speedButton.setOnClickListener {
-            //viewModel.thread.changeTicks()
-            click(it)
+            pauseGame(); controlButtonClick(it)
         }
         binding.startGame.setOnClickListener {
-            resumeGame()
+            resumeGame(); controlButtonClick(it)
+        }
+        binding.restartGame.setOnClickListener {
+            restartGame(); controlButtonClick(it)
+        }
+    }
+
+    private fun View.directionButtonSetOnTouchListener(direction: Int) {
+        setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(view: View?, event: MotionEvent?): Boolean {
+                when (event?.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        viewModel.changeDirection(direction)
+                        performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        startAnimation(AnimationUtils.loadAnimation(context, android.R.anim.fade_in))
+                        return true
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        performClick()
+                        return true
+                    }
+                }
+                return false
+            }
+        })
+    }
+
+    private fun controlButtonClick(views: Array<View>) {
+        views.forEach {
             it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
             it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_out))
         }
     }
 
-    private fun click(it: View) {
+    private fun controlButtonClick(it: View) {
         it.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
-        it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_in))
+        it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_out))
     }
 
     override fun onDestroyView() {

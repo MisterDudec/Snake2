@@ -2,12 +2,16 @@ package com.example.snake2.ui.game
 
 import android.os.SystemClock
 import android.util.Log
-import com.example.snake2.data.Config
+import com.example.domain.config.ADD_APPLE_PERIOD
+import com.example.domain.gamestate.GameState
+import com.example.domain.gamestate.GameStateController
+import com.example.domain.usecase.Game
+
 
 /**
  * Created by Sex_predator on 27.03.2016.
  */
-class GameThread(private val viewModel: GameViewModel) : Thread() {
+class GameThread(private val game: Game, private val viewModel: GameViewModel) : Thread() {
     private var running = false
     private val maxFrameSkip = 5
     private var ticksPerSecond = TICKS_60
@@ -44,12 +48,12 @@ class GameThread(private val viewModel: GameViewModel) : Thread() {
 
             Log.v("$GameThread", "$getTickCount > $nextGameTick && $loops < $maxFrameSkip")
             while(getTickCount > nextGameTick && loops < maxFrameSkip) {
-                val timeToAddApple = counter / 1000000 > Config.ADD_APPLE_PERIOD
+                val timeToAddApple = counter / 1000000 > ADD_APPLE_PERIOD
                 if (timeToAddApple) counter = 0
 
                 Log.d("$GameThread", "time = ${counter / 100000}, bool = $timeToAddApple")
 
-                viewModel.updateGame(timeToAddApple)
+                game.updateGame(timeToAddApple)
                 nextGameTick += skipTicks
 
                 Log.v("$this/run", "updateGame: $loops")
@@ -59,7 +63,7 @@ class GameThread(private val viewModel: GameViewModel) : Thread() {
             //interpolation = (getTickCount + skipTicks - nextGameTick).toFloat() // float( SKIP_TICKS );
             viewModel.drawFrame()
 
-            while (viewModel.isPaused()) {
+            while (GameStateController.gameState !is GameState.Play) {
                 sleep(skipTicks.toLong())
                 nextGameTick = getTickCount
                 loops++

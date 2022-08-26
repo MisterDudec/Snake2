@@ -7,14 +7,8 @@ import android.os.Looper
 import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceView
-import androidx.fragment.app.viewModels
 import com.example.snake2.R
-import com.example.snake2.ui.game.GameModel
-import com.example.snake2.ui.game.GameViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable.join
-import kotlinx.coroutines.launch
+import com.example.domain.models.GameModel
 import java.lang.IndexOutOfBoundsException
 
 
@@ -31,14 +25,14 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         paint.style = Paint.Style.FILL
     }
 
-    suspend fun drawFrame(gameFieldData: GameModel) {
+    suspend fun drawFrame(gameModel: GameModel) {
         Log.d("threads", "drawFrame: ${Looper.myLooper()}")
         var canvas: Canvas?
         canvas = null
         try {
             canvas = holder.lockCanvas() //получаем canvas
             synchronized(holder) {
-                drawFrame(canvas, gameFieldData) //функция рисования //drawFrame(interpolation)
+                drawFrame(canvas, gameModel) //функция рисования //drawFrame(interpolation)
                 Log.v("$this/run", "draw: ")
             }
         } catch (e: NullPointerException) {
@@ -48,14 +42,14 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         }
     }
 
-    private fun drawFrame(canvas: Canvas, gameFieldData: GameModel) {
+    private fun drawFrame(canvas: Canvas, gameModel: GameModel) {
         Log.d("threads", "drawFrame(): ${Looper.myLooper()}")
         canvas.drawColor(backgroundColor)
 
         paint.color = appleColor
         try {
-            for (i in gameFieldData.apples.indices)
-                canvas.drawRect(gameFieldData.apples[i].rect, paint)
+            for (i in gameModel.apples.indices)
+                canvas.drawRect(gameModel.apples[i].rect, paint)
         } catch (e: IndexOutOfBoundsException) {
             e.printStackTrace()
         }
@@ -63,7 +57,7 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         //TODO resolve ConcurrentModificationException
         paint.color = snakeColor
         try {
-            for (s in gameFieldData.snake)
+            for (s in gameModel.snake)
                 canvas.drawRect(s.rect, paint)
         } catch (e: ConcurrentModificationException) {
             e.printStackTrace()

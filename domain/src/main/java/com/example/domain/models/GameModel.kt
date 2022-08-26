@@ -1,14 +1,9 @@
-package com.example.snake2.ui.game
+package com.example.domain.models
 
 import android.graphics.Rect
 import android.util.Log
-import com.example.snake2.data.Config
-import com.example.snake2.models.Apple
-import com.example.snake2.models.Snake
-import com.example.snake2.ui.game.GameViewModel.Companion.DIR_DEFAULT
-import com.example.snake2.ui.game.GameViewModel.Companion.DIR_TOP
-import com.example.snake2.ui.game.GameViewModel.Companion.DIR_RIGHT
-import com.example.snake2.ui.game.GameViewModel.Companion.DIR_BOTTOM
+import com.example.domain.config.*
+import com.example.domain.config.Direction.*
 
 import kotlin.random.Random
 
@@ -29,11 +24,6 @@ class GameModel {
     private var _gameOver = false
     val gameOver get() = _gameOver
 
-    companion object {
-        const val SIZE = 40
-        const val STEP = 10
-    }
-
     fun setDimensions(width: Int, height: Int) {
         _width = width
         _height = height
@@ -42,13 +32,13 @@ class GameModel {
 
     private fun initialize() {
         val startLeft = width / 2
-        val startTop = height / 2 + SIZE * 5
-        val rect = Rect(startLeft, startTop, startLeft + SIZE, startTop + SIZE)
-        snake.add(Snake(rect, DIR_DEFAULT, 0))
-        repeat(Config.START_SNAKE_LENGTH - 1) {
+        val startTop = height / 2 + SNAKE_SIZE * 10
+        val rect = Rect(startLeft, startTop, startLeft + SNAKE_SIZE, startTop + SNAKE_SIZE)
+        snake.add(Snake(rect, DEFAULT_DIRECTION, 0))
+        repeat(START_SNAKE_LENGTH - 1) {
             growSnake()
         }
-        repeat(Config.START_APPLES_SIZE) {
+        repeat(START_APPLES_SIZE) {
             addApple()
         }
         isModelInitialized = true
@@ -67,35 +57,35 @@ class GameModel {
         val rectangle: Rect
         with (snake[snake.size - 1]) {
             when (direction) {
-                DIR_TOP -> with (rect) {
+                Top -> with (rect) {
                     rectangle = Rect(
                         left,
                         bottom,
                         right,
-                        bottom + SIZE
+                        bottom + SNAKE_SIZE
                     )
                 }
-                DIR_RIGHT -> with (rect) {
+                Right -> with (rect) {
                     rectangle = Rect(
-                        left - SIZE,
+                        left - SNAKE_SIZE,
                         top,
                         left,
                         bottom
                     )
                 }
-                DIR_BOTTOM -> with (rect) {
+                Bottom -> with (rect) {
                     rectangle = Rect(
                         left,
-                        top - SIZE,
+                        top - SNAKE_SIZE,
                         right,
                         top
                     )
                 }
-                else -> with (rect) {
+                Left -> with (rect) {
                     rectangle = Rect(
                         right,
                         top,
-                        right + SIZE,
+                        right + SNAKE_SIZE,
                         bottom
                     )
                 }
@@ -110,8 +100,8 @@ class GameModel {
         var ok: Boolean
 
         while (true) {
-            x = Random.nextInt(0, width - SIZE)
-            y = Random.nextInt(0, height - SIZE)
+            x = Random.nextInt(0, width - APPLE_SIZE)
+            y = Random.nextInt(0, height - APPLE_SIZE)
             ok = true
             /*for (s in snake) {
                 synchronized(s) {
@@ -125,14 +115,14 @@ class GameModel {
             if (ok) break
         }
 
-        apples.add(Apple(Rect(x, y, x + SIZE, y + SIZE)))
+        apples.add(Apple(Rect(x, y, x + APPLE_SIZE, y + APPLE_SIZE)))
     }
 
     fun appleEaten(apple: Apple) {
         apples.remove(apple)
         growSnake()
         if (apples.size <= 1) {
-            repeat(Config.START_APPLES_SIZE) {
+            repeat(START_APPLES_SIZE) {
                 addApple()
             }
         }

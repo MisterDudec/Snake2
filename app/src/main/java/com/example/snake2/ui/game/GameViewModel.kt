@@ -45,12 +45,16 @@ class GameViewModel() : ViewModel() {
         resumeGame()
     }
 
-    fun updateGame() {
+    fun updateGame(timeToAddApples: Boolean) {
+        if (timeToAddApples) model.addApple()
         model.snake.forEachIndexed { index, snake ->
             snake.move(index)
         }
         checkSnakeCollision()
         checkAppleCollision()
+    }
+
+    fun drawFrame() {
         liveData.postValue(model)
     }
 

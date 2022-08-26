@@ -48,7 +48,7 @@ class GameModel {
         repeat(Config.START_SNAKE_LENGTH - 1) {
             growSnake()
         }
-        repeat(Config.START_APPLE) {
+        repeat(Config.START_APPLES_SIZE) {
             addApple()
         }
         isModelInitialized = true
@@ -131,8 +131,8 @@ class GameModel {
     fun appleEaten(apple: Apple) {
         apples.remove(apple)
         growSnake()
-        if (apples.size <= 0) {
-            repeat(3) {
+        if (appleCounter % Config.START_APPLES_SIZE >= Config.START_APPLES_SIZE - 1) {
+            repeat(Config.START_APPLES_SIZE) {
                 addApple()
             }
         }

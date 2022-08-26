@@ -15,6 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.NonCancellable.join
 import kotlinx.coroutines.launch
+import java.lang.IndexOutOfBoundsException
 
 
 class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
@@ -49,12 +50,15 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     private fun drawFrame(canvas: Canvas, gameFieldData: GameModel) {
         Log.d("threads", "drawFrame(): ${Looper.myLooper()}")
-
         canvas.drawColor(backgroundColor)
 
         paint.color = appleColor
-        for (i in gameFieldData.apples.indices)
-            canvas.drawRect(gameFieldData.apples[i].rect, paint)
+        try {
+            for (i in gameFieldData.apples.indices)
+                canvas.drawRect(gameFieldData.apples[i].rect, paint)
+        } catch (e: IndexOutOfBoundsException) {
+            e.printStackTrace()
+        }
 
         //TODO resolve ConcurrentModificationException
         paint.color = snakeColor
@@ -64,8 +68,6 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         } catch (e: ConcurrentModificationException) {
             e.printStackTrace()
         }
-
-
     }
 
     constructor(context: Context) : this(context, null, 0)

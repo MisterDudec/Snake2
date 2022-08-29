@@ -1,6 +1,7 @@
 package com.example.snake2.activity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.SurfaceHolder
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
+
+        Log.d("threads", "onCreate(): ${Thread.currentThread()}")
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

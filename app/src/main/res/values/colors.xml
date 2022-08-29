@@ -21,7 +21,7 @@
     <color name="mainAppText">#ffffff</color>
 
     <color name="background_surface_view">#FBFCF6</color>
-    <color name="snake">@color/green_a700_dark</color>
+    <color name="snake">#00FF00</color>
     <color name="apple">@color/red_a700_light</color>
 
     <color name="purple_500a">#5E00E4</color>

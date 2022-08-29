@@ -1,28 +1,48 @@
 package com.example.snake2.view
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.os.Looper
+import android.graphics.*
 import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceView
-import com.example.snake2.R
+import com.example.domain.config.Direction
+import com.example.domain.config.SNAKE_SIZE
 import com.example.domain.models.GameModel
-import java.lang.IndexOutOfBoundsException
+import com.example.domain.models.Snake
+import com.example.snake2.R
+import com.example.snake2.activity.ViewModelObserver
 
 
 class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
-    SurfaceView(context, attrs, defStyle) {
-    val paint = Paint()
+    SurfaceView(context, attrs, defStyle), ViewModelObserver {
+    //private val paint = Paint()
     private val backgroundColor = context.getColor(R.color.background_surface_view)
     private var snakeColor = context.getColor(R.color.snake)
     private var appleColor = context.getColor(R.color.apple)
 
+    private val paintSnake = Paint()
+    private val paintSnakeBlur = Paint()
+
+    private val paintApple = Paint()
+    private val paintAppleBlur = Paint()
 
     init {
-        paint.isAntiAlias = true
-        paint.style = Paint.Style.FILL
+        paintSnake.isAntiAlias = true
+        paintSnake.isDither = true
+        paintSnake.style = Paint.Style.FILL
+        paintSnake.color = snakeColor
+
+        paintSnakeBlur.set(paintSnake)
+        paintSnakeBlur.maskFilter = BlurMaskFilter(50f, BlurMaskFilter.Blur.OUTER)
+
+        paintApple.set(paintSnake)
+        paintApple.color = appleColor
+        paintAppleBlur.set(paintSnakeBlur)
+        paintAppleBlur.color = appleColor
+    }
+
+    override fun draw(gameModel: GameModel) {
+        drawFrame(gameModel)
     }
 
     fun drawFrame(gameModel: GameModel) {
@@ -43,25 +63,52 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     }
 
     private fun drawFrame(canvas: Canvas, gameModel: GameModel) {
-        //Log.d("threads", "drawFrame(): ${Looper.myLooper()}")
+        Log.d("threads", "drawFrame(): ${Thread.currentThread()}")
         canvas.drawColor(backgroundColor)
 
-        paint.color = appleColor
         try {
-            for (i in gameModel.apples.indices)
-                canvas.drawRect(gameModel.apples[i].rect, paint)
-        } catch (e: IndexOutOfBoundsException) {
+            for (apple in gameModel.apples){
+                canvas.drawRect(apple.rect, paintAppleBlur)
+                canvas.drawRect(apple.rect, paintApple)
+            }
+        } catch (e: Exception) {
             e.printStackTrace()
-        }
+        } //IndexOutOfBoundsException, ConcurrentModificationException //TODO resolve ConcurrentModificationException
 
-        //TODO resolve ConcurrentModificationException
-        paint.color = snakeColor
+        val path = Path()
         try {
-            for (s in gameModel.snake)
-                canvas.drawRect(s.rect, paint)
+            for (s in gameModel.snake) {
+                path.addRect(RectF(s.rect), Path.Direction.CW)
+            }
+            canvas.drawPath(path, paintSnakeBlur)
+            canvas.drawPath(path, paintSnake)
         } catch (e: ConcurrentModificationException) {
             e.printStackTrace()
         }
+    }
+
+    private fun Snake.blur() : Rect {
+        val newRect = rect.copy()
+        if (direction == Direction.Top || direction == Direction.Bottom) {
+            with (newRect) {
+                top = rect.top
+                bottom = rect.bottom
+                left = rect.left - SNAKE_SIZE / 2
+                right = rect.right + SNAKE_SIZE / 2
+            }
+        } else {
+            with (newRect) {
+                top = rect.top - SNAKE_SIZE / 2
+                bottom = rect.bottom + SNAKE_SIZE / 2
+                left = rect.left
+                right = rect.right
+            }
+        }
+        return newRect
+    }
+
+    private fun Rect.copy() : Rect {
+        return Rect(left, top, right, bottom)
     }
 
     constructor(context: Context) : this(context, null, 0)

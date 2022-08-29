@@ -18,9 +18,10 @@ class SurfaceHolderCallback(
 
         viewModel.setDimensions(surfaceView.width, surfaceView.height)
 
+        viewModel.setObserver(surfaceView)
+
         viewModel.liveData.observe(activity) {
             //Log.d("observe", "onViewCreated looper: ${Looper.myLooper()}")
-
             CoroutineScope(Dispatchers.Unconfined).launch {
                 surfaceView.drawFrame(it)
             }

@@ -12,8 +12,8 @@ import com.example.snake2.activity.GameViewModel
 /**
  * Created by Sex_predator on 27.03.2016.
  */
-class GameThread(private val game: Game, private val viewModel: GameViewModel) : Thread() {
-    private var running = false
+open class GameThread(private val game: Game, private val viewModel: GameViewModel) : Thread() {
+    internal var running = false
     private val maxFrameSkip = 5
     private var ticksPerSecond = TICKS_60
     private var skipTicks = 1000 / ticksPerSecond
@@ -49,7 +49,7 @@ class GameThread(private val game: Game, private val viewModel: GameViewModel) :
 
             //Log.v("$GameThread", "$getTickCount > $nextGameTick && $loops < $maxFrameSkip")
             while(getTickCount > nextGameTick && loops < maxFrameSkip) {
-                val timeToAddApple = counter / 100000000     > ADD_APPLE_PERIOD
+                val timeToAddApple = counter / 300000000 > ADD_APPLE_PERIOD
                 if (timeToAddApple) counter = 0
 
                 //Log.d("$GameThread", "time = ${counter / 100000}, bool = $timeToAddApple")
@@ -62,7 +62,7 @@ class GameThread(private val game: Game, private val viewModel: GameViewModel) :
             }
 
             //interpolation = (getTickCount + skipTicks - nextGameTick).toFloat() // float( SKIP_TICKS );
-            viewModel.drawFrame()
+            //viewModel.drawFrame()
 
             while (GameStateController.gameState !is GameState.Play) {
                 sleep(skipTicks.toLong())

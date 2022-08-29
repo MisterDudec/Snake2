@@ -1,6 +1,7 @@
 package com.example.snake2.ui.game
 
 import androidx.annotation.MainThread
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.domain.config.Direction
@@ -9,7 +10,8 @@ import com.example.domain.models.GameModel
 import com.example.domain.models.Snake
 
 class GameViewModel : ViewModel() {
-    val liveData: MutableLiveData<GameModel> = MutableLiveData() //TODO liveDataGet: LiveData<GameFieldData> = liveData
+    val _liveData: MutableLiveData<GameModel> = MutableLiveData() //TODO liveDataGet: LiveData<GameFieldData> = liveData
+    val liveData: LiveData<GameModel> get() = _liveData
     private val game: Game = Game()
     private val thread = GameThread(game, this)
 
@@ -20,7 +22,7 @@ class GameViewModel : ViewModel() {
 
     @MainThread
     fun setDimensions(width: Int, height: Int) {
-        liveData.value = game.setDimensions(width, height)
+        _liveData.value = game.setDimensions(width, height)
     }
 
     fun changeDirection(direction: Direction) {
@@ -28,7 +30,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun drawFrame() {
-        liveData.postValue(game.model)
+        _liveData.postValue(game.model)
     }
 
     fun restartGame() {

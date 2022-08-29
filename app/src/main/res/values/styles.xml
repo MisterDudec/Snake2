@@ -14,7 +14,7 @@
     </style>
 
     <style name="FullScreenDialogStyle" parent="AppTheme">
-        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsFloating">false</item>
     </style>
@@ -44,6 +44,11 @@
 
     <style name="ruleButtons">
 
+    </style>
+
+    <style name="Widget.Theme.Snake2.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 
 </resources>

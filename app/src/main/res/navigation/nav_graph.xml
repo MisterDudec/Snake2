@@ -12,19 +12,40 @@
         tools:layout="@layout/fragment_game">
 
         <action
-            android:id="@+id/action_GameFragment_to_MainMenuFragment"
-            app:destination="@id/MainMenuFragment" />
+            android:id="@+id/action_GameFragment_to_GameOverFragment"
+            app:destination="@id/GameOverFragment" />
+        <action
+            android:id="@+id/action_GameFragment_to_SettingsDialogFragment"
+            app:destination="@id/SettingsDialogFragment" />
+
     </fragment>
 
     <dialog
-        android:id="@+id/MainMenuFragment"
-        android:name="com.example.snake2.ui.mainmenu.MainMenuFragment"
-        tools:layout="@layout/fragment_main_menu">
+        android:id="@+id/GameOverFragment"
+        android:name="com.example.snake2.ui.gameover.GameOverFragment"
+        tools:layout="@layout/fragment_game_over">
 
         <action
-            android:id="@+id/action_MainMenuFragment_to_GameFragment"
-            app:destination="@id/GameFragment"/>
+            android:id="@+id/action_GameOverFragment_to_GameFragment"
+            app:destination="@id/GameFragment" />
+        <action
+            android:id="@+id/action_GameOverFragment_to_SettingsDialogFragment"
+            app:destination="@id/SettingsDialogFragment" />
     </dialog>
 
+    <dialog
+        android:id="@+id/SettingsDialogFragment"
+        android:name="com.example.snake2.ui.SettingsDialogFragment"
+        tools:layout="@layout/fragment_settings_dialog">
+
+    </dialog>
+
+
+    <fragment
+        android:id="@+id/SettingFragment"
+        android:name="com.example.snake2.ui.settings.SettingsFragment"
+        tools:layout="@layout/fragment_settings">
+
+    </fragment>
 
 </navigation>

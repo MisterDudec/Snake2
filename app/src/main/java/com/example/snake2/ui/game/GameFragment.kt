@@ -10,11 +10,13 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.domain.config.*
 import com.example.domain.gamestate.GameState
 import com.example.domain.gamestate.GameStateController
 import com.example.domain.gamestate.GameStateController.gameState
 import com.example.domain.gamestate.GameStateControllerObserver
+import com.example.snake2.R
 import com.example.snake2.databinding.FragmentGameBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -112,12 +114,15 @@ class GameFragment : Fragment(), GameStateControllerObserver {
     private fun showScreen() {
         binding.groupGameButtons.visibility = View.GONE
         binding.groupGameOverButtons.visibility = View.GONE
-        binding.startGame.visibility = View.GONE
+        binding.layoutMenu.visibility = View.GONE
 
         when (gameState) {
-            is GameState.Pause -> binding.startGame.visibility = View.VISIBLE
+            is GameState.Pause -> binding.layoutMenu.visibility = View.VISIBLE
             is GameState.Play -> binding.groupGameButtons.visibility = View.VISIBLE
-            is GameState.GameOver -> binding.groupGameOverButtons.visibility = View.VISIBLE
+            is GameState.GameOver -> {
+                findNavController().navigate(R.id.action_GameFragment_to_GameOverFragment)
+                //binding.groupGameOverButtons.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -130,11 +135,14 @@ class GameFragment : Fragment(), GameStateControllerObserver {
         binding.pause.setOnClickListener {
             GameStateController.pauseGame(); controlButtonClick(it)
         }
-        binding.startGame.setOnClickListener {
+        binding.buttonStartGame.setOnClickListener {
             GameStateController.resumeGame(); controlButtonClick(it)
         }
         binding.restartGame.setOnClickListener {
             restartGame(); controlButtonClick(it)
+        }
+        binding.buttonSettings.setOnClickListener {
+            findNavController().navigate(R.id.action_GameFragment_to_SettingsDialogFragment)
         }
         //TODO merge setters to extension
     }

@@ -1,6 +1,6 @@
 package com.example.domain.config
 
-const val START_SNAKE_LENGTH = 5
+const val START_SNAKE_LENGTH = 20
 const val START_APPLES_SIZE = 3
 
 const val ADD_APPLE_PERIOD = 15

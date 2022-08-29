@@ -33,8 +33,14 @@ class GameModel {
     private fun initialize() {
         val startLeft = width / 2
         val startTop = height / 2 + SNAKE_SIZE * 10
-        val rect = Rect(startLeft, startTop, startLeft + SNAKE_SIZE, startTop + SNAKE_SIZE)
-        snake.add(Snake(rect, DEFAULT_DIRECTION, 0))
+
+        snake.add(
+            Snake(
+                Rect(startLeft, startTop, startLeft + SNAKE_SIZE, startTop + SNAKE_SIZE),
+                DEFAULT_DIRECTION,
+                0
+            )
+        )
         repeat(START_SNAKE_LENGTH - 1) {
             growSnake()
         }

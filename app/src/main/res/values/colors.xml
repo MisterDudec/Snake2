@@ -44,10 +44,6 @@
     <color name="test_entry_background">#ECEFE6</color>
 
 
-
-
-
-
     <color name="lessThenZero">#aad440</color>
     <color name="zero">#ff0300</color>
     <color name="one">#ff9d00</color>
@@ -60,4 +56,9 @@
     <color name="eight">#aea758</color>
     <color name="nine">#a93500</color>
     <color name="heart">#F44336</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color>
 </resources>

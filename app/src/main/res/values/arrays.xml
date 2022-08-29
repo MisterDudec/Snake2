@@ -19,16 +19,6 @@
         <item>5</item>
         <item>6</item>
     </string-array>
-
-    <array name="peopleImg">
-        <item>@drawable/bistrov</item>
-        <item>@drawable/dima</item>
-        <item>@drawable/dima2</item>
-        <item>@drawable/horse</item>
-        <item>@drawable/katya</item>
-        <item>@drawable/nastya</item>
-        <item>@drawable/tsar</item>
-    </array>
     <!-- Reply Preference -->
     <string-array name="reply_entries">
         <item>Reply</item>

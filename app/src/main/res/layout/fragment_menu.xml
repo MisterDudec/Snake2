@@ -1,36 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    tools:context=".ui.gameover.GameOverFragment">
-
-    <TextView
-        android:id="@+id/game_over_text"
-        style="@style/imageButtons"
-        android:src="@drawable/ic_baseline_replay_144"
-        android:text="@string/game_over"
-        android:textSize="48sp"
-        android:textStyle="bold"
-        android:textColor="@color/command_button_text"
-        app:layout_constraintVertical_bias="0.9"
-        app:layout_constraintBottom_toTopOf="@id/restart_game"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintTag="game_over" />
+    tools:context=".ui.menu.MenuFragment">
 
     <androidx.appcompat.widget.AppCompatImageButton
-        android:id="@+id/restart_game"
+        android:id="@+id/button_start_game"
         style="@style/imageButtons"
-        android:src="@drawable/ic_baseline_replay_144"
+        android:src="@drawable/ic_baseline_play_arrow_144"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/button_settings"

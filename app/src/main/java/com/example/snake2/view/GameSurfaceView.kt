@@ -25,15 +25,15 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         paint.style = Paint.Style.FILL
     }
 
-    suspend fun drawFrame(gameModel: GameModel) {
-        Log.d("threads", "drawFrame: ${Looper.myLooper()}")
+    fun drawFrame(gameModel: GameModel) {
+        //Log.d("threads", "drawFrame: ${Looper.myLooper()}")
         var canvas: Canvas?
         canvas = null
         try {
             canvas = holder.lockCanvas() //получаем canvas
             synchronized(holder) {
                 drawFrame(canvas, gameModel) //функция рисования //drawFrame(interpolation)
-                Log.v("$this/run", "draw: ")
+                //Log.v("$this/run", "draw: ")
             }
         } catch (e: NullPointerException) {
             e.printStackTrace() //если canvas не доступен
@@ -43,7 +43,7 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     }
 
     private fun drawFrame(canvas: Canvas, gameModel: GameModel) {
-        Log.d("threads", "drawFrame(): ${Looper.myLooper()}")
+        //Log.d("threads", "drawFrame(): ${Looper.myLooper()}")
         canvas.drawColor(backgroundColor)
 
         paint.color = appleColor

@@ -6,6 +6,7 @@ import com.example.domain.config.ADD_APPLE_PERIOD
 import com.example.domain.gamestate.GameState
 import com.example.domain.gamestate.GameStateController
 import com.example.domain.usecase.Game
+import com.example.snake2.activity.GameViewModel
 
 
 /**
@@ -46,17 +47,17 @@ class GameThread(private val game: Game, private val viewModel: GameViewModel) :
             var loops = 0
 
 
-            Log.v("$GameThread", "$getTickCount > $nextGameTick && $loops < $maxFrameSkip")
+            //Log.v("$GameThread", "$getTickCount > $nextGameTick && $loops < $maxFrameSkip")
             while(getTickCount > nextGameTick && loops < maxFrameSkip) {
-                val timeToAddApple = counter / 1000000 > ADD_APPLE_PERIOD
+                val timeToAddApple = counter / 100000000     > ADD_APPLE_PERIOD
                 if (timeToAddApple) counter = 0
 
-                Log.d("$GameThread", "time = ${counter / 100000}, bool = $timeToAddApple")
+                //Log.d("$GameThread", "time = ${counter / 100000}, bool = $timeToAddApple")
 
                 game.updateGame(timeToAddApple)
                 nextGameTick += skipTicks
 
-                Log.v("$this/run", "updateGame: $loops")
+                //Log.v("$this/run", "updateGame: $loops")
                 loops++
             }
 

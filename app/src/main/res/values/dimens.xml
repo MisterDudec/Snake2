@@ -1,5 +1,5 @@
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="screen_margin">16dp</dimen>
 
     <dimen name="button">64dp</dimen>
 

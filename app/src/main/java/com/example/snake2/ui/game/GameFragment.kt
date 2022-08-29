@@ -8,24 +8,19 @@ import android.view.*
 import android.view.animation.AnimationUtils
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.get
 import com.example.domain.config.*
 import com.example.domain.gamestate.GameState
 import com.example.domain.gamestate.GameStateController
 import com.example.domain.gamestate.GameStateController.gameState
 import com.example.domain.gamestate.GameStateControllerObserver
 import com.example.snake2.R
+import com.example.snake2.activity.GameViewModel
 import com.example.snake2.databinding.FragmentGameBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
-
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
 
 @SuppressLint("NewApi")
 class GameFragment : Fragment(), GameStateControllerObserver {
@@ -33,14 +28,14 @@ class GameFragment : Fragment(), GameStateControllerObserver {
     private var _binding: FragmentGameBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<GameViewModel>()
+    private val viewModel: GameViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 when (gameState) {
-                    GameState.Play -> pauseGame()
+                    GameState.Play -> GameStateController.pauseGame()
                     GameState.Pause -> activity?.onBackPressed()
                     GameState.GameOver -> activity?.onBackPressed()
                 }
@@ -54,79 +49,24 @@ class GameFragment : Fragment(), GameStateControllerObserver {
         return binding.root
     }
 
-    private val surfaceHolderCallback = object : SurfaceHolder.Callback {
-        override fun surfaceCreated(holder: SurfaceHolder) {
-            Log.d("threads", "surfaceCreated: ${Looper.myLooper()}")
-
-            viewModel.setDimensions(binding.surfaceView.width, binding.surfaceView.height)
-            viewModel.liveData.observe(viewLifecycleOwner) {
-                Log.d("observe", "onViewCreated looper: ${Looper.myLooper()}")
-
-                CoroutineScope(Dispatchers.Unconfined).launch {
-                    binding.surfaceView.drawFrame(it)
-                }
-                binding.appleCounter.text = it.appleCounter.toString()
-                binding.liveCounter.text = it.liveCounter.toInt().toString()
-            }
-            viewModel.startGame()
-        }
-
-        override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-            viewModel.setDimensions(binding.surfaceView.width, binding.surfaceView.height)
-        }
-
-        override fun surfaceDestroyed(holder: SurfaceHolder) {
-
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("threads", "onViewCreated: ${Looper.myLooper()}")
 
         GameStateController.observer = this
 
-        binding.surfaceView.holder.addCallback(surfaceHolderCallback)
-        setButtons()
+        viewModel.liveData.observe(viewLifecycleOwner) {
+            lifecycleScope.launch {
+                binding.appleCounter.text = it.appleCounter.toString()
+                binding.liveCounter.text = it.liveCounter.toInt().toString()
+            }
+        }
+
+        setButtonsListeners()
 
         super.onViewCreated(view, savedInstanceState)
     }
 
-    override fun resumeGame() {
-        showScreen()
-    } //TODO merger these functions, create special observer for fragment and for the other classes
-
-    override fun pauseGame() {
-        showScreen()
-    }
-
-    override fun gameOver() {
-        lifecycleScope.launch {
-            showScreen()
-        } // Coroutine is is used to do not touch view from game thread
-    }
-
-    private fun restartGame() {
-        GameStateController.resumeGame()
-        viewModel.restartGame()
-        //showScreen() - GameStateController.resumeGame() shows screen
-    }
-
-    private fun showScreen() {
-        binding.groupGameButtons.visibility = View.GONE
-        binding.groupGameOverButtons.visibility = View.GONE
-        binding.layoutMenu.visibility = View.GONE
-
-        when (gameState) {
-            is GameState.Pause -> binding.layoutMenu.visibility = View.VISIBLE
-            is GameState.Play -> binding.groupGameButtons.visibility = View.VISIBLE
-            is GameState.GameOver -> {
-                findNavController().navigate(R.id.action_GameFragment_to_GameOverFragment)
-                //binding.groupGameOverButtons.visibility = View.VISIBLE
-            }
-        }
-    }
-
-    private fun setButtons() {
+    private fun setButtonsListeners() {
         binding.topButton.directionButtonSetOnTouchListener(Direction.Top)
         binding.rightButton.directionButtonSetOnTouchListener(Direction.Right)
         binding.bottomButton.directionButtonSetOnTouchListener(Direction.Bottom)
@@ -134,15 +74,6 @@ class GameFragment : Fragment(), GameStateControllerObserver {
 
         binding.pause.setOnClickListener {
             GameStateController.pauseGame(); controlButtonClick(it)
-        }
-        binding.buttonStartGame.setOnClickListener {
-            GameStateController.resumeGame(); controlButtonClick(it)
-        }
-        binding.restartGame.setOnClickListener {
-            restartGame(); controlButtonClick(it)
-        }
-        binding.buttonSettings.setOnClickListener {
-            findNavController().navigate(R.id.action_GameFragment_to_SettingsDialogFragment)
         }
         //TODO merge setters to extension
     }
@@ -172,6 +103,23 @@ class GameFragment : Fragment(), GameStateControllerObserver {
         it.startAnimation(AnimationUtils.loadAnimation(it.context, android.R.anim.fade_out))
     }
 
+    override fun pauseGame() {
+        with (findNavController()) {
+            if (currentDestination == graph[R.id.GameFragment])
+                navigate(R.id.action_GameFragment_to_MainMenuFragment)
+        }
+    }
+
+    override fun gameOver() {
+        lifecycleScope.launch {
+            findNavController().navigate(R.id.action_GameFragment_to_GameOverFragment)
+        } // Coroutine is is used to do not touch view from game thread
+    }
+
+    override fun resumeGame() {
+        //showScreen()
+    } //TODO merge these functions, create special observer for fragment and for the other classes
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -180,6 +128,11 @@ class GameFragment : Fragment(), GameStateControllerObserver {
     override fun onPause() {
         GameStateController.pauseGame()
         super.onPause()
+    }
+
+    override fun onResume() {
+        GameStateController.resumeGame()
+        super.onResume()
     }
 }
 

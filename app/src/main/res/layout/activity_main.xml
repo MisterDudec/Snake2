@@ -8,6 +8,12 @@
     android:theme="@style/AppTheme"
     tools:context=".activity.MainActivity">
 
+    <com.example.snake2.view.GameSurfaceView
+        android:id="@+id/surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:foreground="@drawable/main_background_light"/>
+
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment_content_main"
         android:name="androidx.navigation.fragment.NavHostFragment"

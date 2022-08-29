@@ -1,7 +1,8 @@
 package com.example.snake2.activity
 
-import android.content.res.Configuration
 import android.os.Bundle
+import android.view.SurfaceHolder
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -10,12 +11,18 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.snake2.R
 import com.example.snake2.databinding.ActivityMainBinding
+import com.example.snake2.view.SurfaceHolderCallback
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: GameViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -25,17 +32,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         hideSystemBars()
+
+        val surfaceHolderCallback = SurfaceHolderCallback(viewModel, binding.surfaceView, this)
+        binding.surfaceView.holder.addCallback(surfaceHolderCallback)
     }
 
     fun hideSystemBars() {
-        val windowInsetsController = WindowCompat.getInsetsController(window, window.decorView)
-        windowInsetsController.systemBarsBehavior =
-            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
+        with (WindowCompat.getInsetsController(window, window.decorView)) {
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            hide(WindowInsetsCompat.Type.systemBars())
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

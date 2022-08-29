@@ -1,4 +1,4 @@
-package com.example.snake2.ui
+package com.example.snake2.ui.settings
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -12,8 +12,6 @@ import kotlinx.coroutines.launch
 class Game {
     val model: GameModel = GameModel()
 
-    //var pause = true
-
     fun setDimensions(width: Int, height: Int): GameModel {
         model.setDimensions(width, height)
         return model
@@ -28,8 +26,7 @@ class Game {
         checkAppleCollision()
     }
 
-    fun gameOver() {
-
+    private fun gameOver() {
         GameStateController.gameOver()
         model.gameOver()
     }
@@ -103,6 +100,4 @@ class Game {
             }
         }
     }
-
-
 }

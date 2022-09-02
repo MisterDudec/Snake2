@@ -1,9 +1,9 @@
-package com.example.snake2.view
+package com.example.snake2.surfaceview
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.*
 import android.util.AttributeSet
-import android.util.Log
 import android.view.SurfaceView
 import com.example.domain.config.Direction
 import com.example.domain.config.SNAKE_SIZE
@@ -26,17 +26,30 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     private val paintApple = Paint()
     private val paintAppleBlur = Paint()
 
+    val path = Path()
+
+    private val preferences: SharedPreferences = context.getSharedPreferences("preferences", 0)
+    private val glow = preferences.getBoolean(context.getString(R.string.glow_key), false)
+
     init {
-        paintSnake.isAntiAlias = true
-        paintSnake.isDither = true
+        //paintSnake.isAntiAlias = true
+        //paintSnake.isDither = true
         paintSnake.style = Paint.Style.FILL
         paintSnake.color = snakeColor
+        //paintSnake.setShadowLayer(50f, 0f, 0f, snakeColor)
+
+        //RadialGradient()
 
         paintSnakeBlur.set(paintSnake)
-        paintSnakeBlur.maskFilter = BlurMaskFilter(50f, BlurMaskFilter.Blur.OUTER)
+        //paintSnakeBlur.setShadowLayer(30f, 0, 0,)
+        //paintSnakeBlur.style = Paint.Style.STROKE
+        //paintSnakeBlur.strokeWidth = 10f
+        paintSnakeBlur.maskFilter = BlurMaskFilter(30f, BlurMaskFilter.Blur.SOLID)
 
         paintApple.set(paintSnake)
         paintApple.color = appleColor
+        //paintApple.setShadowLayer(50f, 0f, 0f, appleColor)
+
         paintAppleBlur.set(paintSnakeBlur)
         paintAppleBlur.color = appleColor
     }
@@ -47,44 +60,47 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     fun drawFrame(gameModel: GameModel) {
         //Log.d("threads", "drawFrame: ${Looper.myLooper()}")
-        var canvas: Canvas?
-        canvas = null
-        try {
-            canvas = holder.lockCanvas() //получаем canvas
-            synchronized(holder) {
-                drawFrame(canvas, gameModel) //функция рисования //drawFrame(interpolation)
-                //Log.v("$this/run", "draw: ")
-            }
-        } catch (e: NullPointerException) {
-            e.printStackTrace() //если canvas не доступен
-        } finally {
-            if (canvas != null) holder.unlockCanvasAndPost(canvas) //освобождаем canvas
-        }
+        val canvas: Canvas = holder.lockCanvas()
+        drawFrame(canvas, gameModel)
+        holder.unlockCanvasAndPost(canvas)
     }
 
     private fun drawFrame(canvas: Canvas, gameModel: GameModel) {
-        Log.d("threads", "drawFrame(): ${Thread.currentThread()}")
         canvas.drawColor(backgroundColor)
+            //canvas.drawColor(Color.BLACK)
 
-        try {
-            for (apple in gameModel.apples){
-                canvas.drawRect(apple.rect, paintAppleBlur)
-                canvas.drawRect(apple.rect, paintApple)
-            }
+        for (apple in gameModel.apples){
+            canvas.drawRect(apple.rect, paintAppleBlur)
+            canvas.drawRect(apple.rect, paintAppleBlur)
+            canvas.drawRect(apple.rect, paintAppleBlur)
+            canvas.drawRect(apple.rect, paintAppleBlur)
+            canvas.drawRect(apple.rect, paintApple)
+        }
+
+        /*try {
         } catch (e: Exception) {
             e.printStackTrace()
-        } //IndexOutOfBoundsException, ConcurrentModificationException //TODO resolve ConcurrentModificationException
+        }*/ //IndexOutOfBoundsException, ConcurrentModificationException //TODO resolve ConcurrentModificationException
 
-        val path = Path()
-        try {
-            for (s in gameModel.snake) {
-                path.addRect(RectF(s.rect), Path.Direction.CW)
-            }
-            canvas.drawPath(path, paintSnakeBlur)
-            canvas.drawPath(path, paintSnake)
+        //canvas.drawPath(path, paintSnakeBlur)
+
+        if (glow) path.reset()
+        for (s in gameModel.snake) {
+            if (glow) path.addRect(RectF(s.rect), Path.Direction.CW)
+            canvas.drawRect(s.rect, paintSnake)
+        }
+
+        if (glow) canvas.drawPath(path, paintSnakeBlur)
+
+
+        //path.
+        //canvas.drawPath(path, paintSnake)
+        //path.
+
+        /*try {
         } catch (e: ConcurrentModificationException) {
             e.printStackTrace()
-        }
+        }*/
     }
 
     private fun Snake.blur() : Rect {

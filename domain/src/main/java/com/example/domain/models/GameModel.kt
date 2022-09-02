@@ -8,9 +8,14 @@ import com.example.domain.config.Direction.*
 import kotlin.random.Random
 
 class GameModel {
+
     private val logTag = "GameFieldData"
-    val snake = ArrayList<Snake>()
-    val apples = ArrayList<Apple>()
+
+    private val _snake = ArrayList<Snake>()
+    val snake get() = _snake.toList()
+
+    private val _apples = ArrayList<Apple>()
+    val apples get() = _apples.toList()
 
     private var _width: Int? = null
     private var _height: Int? = null
@@ -34,7 +39,7 @@ class GameModel {
         val startLeft = width / 2
         val startTop = height / 2 + SNAKE_SIZE * 10
 
-        snake.add(
+        _snake.add(
             Snake(
                 Rect(startLeft, startTop, startLeft + SNAKE_SIZE, startTop + SNAKE_SIZE),
                 DEFAULT_DIRECTION,
@@ -52,8 +57,8 @@ class GameModel {
 
     fun restartGame() {
         _gameOver = false
-        snake.removeAll(snake.toSet())
-        apples.removeAll(apples.toSet())
+        _snake.removeAll(snake.toSet())
+        _apples.removeAll(apples.toSet())
         appleCounter = 0
         liveCounter = 1f
         initialize()
@@ -96,7 +101,7 @@ class GameModel {
                     )
                 }
             }
-            snake.add(Snake(rectangle, direction, snake.size))
+            _snake.add(Snake(rectangle, direction, snake.size))
         }
     }
 
@@ -121,11 +126,11 @@ class GameModel {
             if (ok) break
         }
 
-        apples.add(Apple(Rect(x, y, x + APPLE_SIZE, y + APPLE_SIZE)))
+        _apples.add(Apple(Rect(x, y, x + APPLE_SIZE, y + APPLE_SIZE)))
     }
 
     fun appleEaten(apple: Apple) {
-        apples.remove(apple)
+        _apples.remove(apple)
         growSnake()
         if (apples.size <= 1) {
             repeat(START_APPLES_SIZE) {
@@ -138,7 +143,7 @@ class GameModel {
 
     fun snakeEaten(s: Int) : Boolean {
         for(i in snake.size - 1 downTo s){
-            snake.removeAt(i)
+            _snake.removeAt(i)
             liveCounter--
         }
         return liveCounter < 0

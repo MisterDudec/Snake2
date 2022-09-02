@@ -2,7 +2,6 @@ package com.example.snake2.activity
 
 import android.os.Bundle
 import android.util.Log
-import android.view.SurfaceHolder
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
@@ -12,10 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.snake2.R
 import com.example.snake2.databinding.ActivityMainBinding
-import com.example.snake2.view.SurfaceHolderCallback
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.example.snake2.surfaceview.SurfaceHolderCallback
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -36,8 +32,14 @@ class MainActivity : AppCompatActivity() {
 
         hideSystemBars()
 
+        setPreferences()
+
         val surfaceHolderCallback = SurfaceHolderCallback(viewModel, binding.surfaceView, this)
         binding.surfaceView.holder.addCallback(surfaceHolderCallback)
+    }
+
+    fun setPreferences() {
+        getSharedPreferences(getString(R.string.glow_key), 0)
     }
 
     fun hideSystemBars() {
@@ -122,4 +124,5 @@ class MainActivity : AppCompatActivity() {
         if (mainSettings.contains(resources.getString(R.string.pref_cherries))) APP_PREFERENCES_CHERRY_VALUE =
             mainSettings.getInt(resources.getString(R.string.pref_cherries), 0)
     }*/
+
 }

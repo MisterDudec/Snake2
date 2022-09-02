@@ -8,7 +8,7 @@
     android:theme="@style/AppTheme"
     tools:context=".activity.MainActivity">
 
-    <com.example.snake2.view.GameSurfaceView
+    <com.example.snake2.surfaceview.GameSurfaceView
         android:id="@+id/surface_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

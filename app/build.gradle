@@ -35,6 +35,10 @@ android {
     dataBinding {
         enabled = true
     }
+    // To use the Android Frame Pacing or Android Performance Tuner libraries, enable
+    // native dependencies to be imported. Libraries will be made available to your CMake build
+    // as packages named "games-frame-pacing" and "games-performance-tuner".
+
 }
 
 dependencies {
@@ -58,4 +62,22 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+
+/*
+    // To use the Android Frame Pacing library
+    implementation "androidx.games:games-frame-pacing:1.10.1"
+
+    // To use the Android Performance Tuner
+    implementation "androidx.games:games-performance-tuner:1.6.0"
+
+    // To use the Games Activity library
+    implementation "androidx.games:games-activity:1.2.1"
+
+    // To use the Games Controller Library
+    implementation "androidx.games:games-controller:1.1.0"
+
+    // To use the Games Text Input Library
+    // Do not include this if games-activity has been included
+    implementation "androidx.games:games-text-input:1.1.1"*/
 }

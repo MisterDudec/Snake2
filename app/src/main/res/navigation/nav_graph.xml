@@ -20,7 +20,7 @@
 
         <action
             android:id="@+id/action_MenuFragment_to_SettingsDialogFragment"
-            app:destination="@id/SettingsDialogFragment"
+            app:destination="@id/SettingsFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -64,26 +64,25 @@
 
         <action
             android:id="@+id/action_GameOverFragment_to_SettingsDialogFragment"
-            app:destination="@id/SettingsDialogFragment"
+            app:destination="@id/SettingsFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
 
-    <dialog
-        android:id="@+id/SettingsDialogFragment"
-        android:name="com.example.snake2.ui.settings.SettingsDialogFragment"
-        tools:layout="@layout/fragment_settings_dialog">
-
-    </dialog>
-
-
     <fragment
+        android:id="@+id/SettingsFragment"
+        android:name="com.example.snake2.ui.settings.SettingsFragment">
+
+    </fragment>
+
+
+    <!--<fragment
         android:id="@+id/SettingFragment"
         android:name="com.example.snake2.ui.settings.SettingsFragment"
         tools:layout="@layout/fragment_settings">
 
-    </fragment>
+    </fragment>-->
 
 </navigation>

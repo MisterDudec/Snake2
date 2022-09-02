@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.example.domain.config.Direction
 import com.example.domain.usecase.Game
 import com.example.domain.models.GameModel
-import com.example.snake2.ui.game.GameThread
+import com.example.snake2.threads.GameThread
 
 class GameViewModel : ViewModel() {
     private val _liveData: MutableLiveData<GameModel> = MutableLiveData()

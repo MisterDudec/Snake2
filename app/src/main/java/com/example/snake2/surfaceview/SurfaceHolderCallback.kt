@@ -1,7 +1,6 @@
-package com.example.snake2.view
+package com.example.snake2.surfaceview
 
 import android.view.SurfaceHolder
-import androidx.fragment.app.activityViewModels
 import com.example.snake2.activity.GameViewModel
 import com.example.snake2.activity.MainActivity
 import kotlinx.coroutines.CoroutineScope

@@ -1,7 +1,6 @@
-package com.example.snake2.ui.game
+package com.example.snake2.threads
 
 import android.os.SystemClock
-import android.util.Log
 import com.example.domain.config.ADD_APPLE_PERIOD
 import com.example.domain.gamestate.GameState
 import com.example.domain.gamestate.GameStateController

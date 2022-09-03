@@ -2,7 +2,7 @@ package com.example.domain.usecase
 
 import com.example.domain.config.*
 import com.example.domain.gamestate.GameStateController
-import com.example.domain.models.GameModel
+import com.example.domain.models.Field
 import com.example.domain.models.Snake
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,9 +10,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class Game {
-    val model: GameModel = GameModel()
+    val model: Field = Field()
 
-    fun setDimensions(width: Int, height: Int): GameModel {
+    fun setDimensions(width: Int, height: Int): Field {
         model.setDimensions(width, height)
         return model
     }
@@ -28,7 +28,6 @@ class Game {
 
     private fun gameOver() {
         GameStateController.gameOver()
-        model.gameOver()
     }
 
     fun restartGame() {

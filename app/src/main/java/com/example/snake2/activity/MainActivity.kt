@@ -18,17 +18,17 @@ import com.example.snake2.R
 import com.example.snake2.databinding.ActivityMainBinding
 import com.example.snake2.surfaceview.SurfaceHolderCallback
 
-class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+class MainActivity : AppCompatActivity() {
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: GameViewModel by viewModels()
+    private var surfaceHolderCallback: SurfaceHolderCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-
         Log.d("threads", "onCreate(): ${Thread.currentThread()}")
 
         _binding = ActivityMainBinding.inflate(layoutInflater)
@@ -37,10 +37,20 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         hideSystemBars()
 
         setPreferences()
+    }
 
-        binding.surfaceView.holder.addCallback(
-            SurfaceHolderCallback(viewModel, binding.surfaceView, this)
-        )
+    override fun onStart() {
+        super.onStart()
+        surfaceHolderCallback = SurfaceHolderCallback(viewModel, binding.surfaceView, this)
+        binding.surfaceView.holder.addCallback(surfaceHolderCallback)
+        viewModel.registerViewModelObserver(binding.surfaceView)
+    }
+
+    override fun onStop() {
+        viewModel.unregisterViewModelObserver()
+        binding.surfaceView.holder.removeCallback(surfaceHolderCallback)
+        surfaceHolderCallback = null
+        super.onStop()
     }
 
     private fun setPreferences() {
@@ -50,7 +60,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    fun hideSystemBars() {
+    private fun hideSystemBars() {
         with (WindowCompat.getInsetsController(window, window.decorView)) {
             systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
             hide(WindowInsetsCompat.Type.systemBars())
@@ -64,20 +74,8 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         _binding = null
-    }
-
-    override fun onSharedPreferenceChanged(preferences: SharedPreferences?, key: String?) {
-        //Log.d("$this", "changed, $key")
-        Log.d("onSharedPreferenceChanged", "changed, $key")
-        when (key) {
-            getString(R.string.glow_key) -> {
-                //Log.d("$this", "$key")
-                Log.d("onSharedPreferenceChanged", "$key")
-                GLOW = preferences?.getBoolean(key, false) == true
-            }
-        }
+        super.onDestroy()
     }
 
     /*override fun onTouchEvent(event: MotionEvent): Boolean {

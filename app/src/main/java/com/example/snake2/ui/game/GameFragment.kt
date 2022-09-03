@@ -54,10 +54,10 @@ class GameFragment : Fragment(), GameStateControllerObserver {
 
         GameStateController.observer = this
 
-        viewModel.liveData.observe(viewLifecycleOwner) {
+        viewModel.counterLiveData.observe(viewLifecycleOwner) {
             lifecycleScope.launch {
-                binding.appleCounter.text = it.appleCounter.toString()
-                binding.liveCounter.text = it.liveCounter.toInt().toString()
+                binding.appleCounter.text = it.apples.toString()
+                binding.liveCounter.text = it.lives.toInt().toString()
             }
         }
 

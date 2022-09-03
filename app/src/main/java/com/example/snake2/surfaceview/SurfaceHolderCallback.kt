@@ -10,29 +10,31 @@ import kotlinx.coroutines.launch
 class SurfaceHolderCallback(
     private val viewModel: GameViewModel,
     private val surfaceView: GameSurfaceView,
-    private val activity: MainActivity): SurfaceHolder.Callback {
+    private val activity: MainActivity
+    ): SurfaceHolder.Callback {
 
     override fun surfaceCreated(holder: SurfaceHolder) {
-        //Log.d("threads", "surfaceCreated: ${Looper.myLooper()}")
-
         viewModel.setDimensions(surfaceView.width, surfaceView.height)
 
-        viewModel.setObserver(surfaceView)
+        //viewModel.registerViewModelObserver(surfaceView)
 
         viewModel.liveData.observe(activity) {
-            //Log.d("observe", "onViewCreated looper: ${Looper.myLooper()}")
             CoroutineScope(Dispatchers.Unconfined).launch {
                 surfaceView.drawFrame(it)
             }
         }
-        viewModel.startGame()
+
+        viewModel.startThreads()
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+        //viewModel.unregisterViewModelObserver()
         viewModel.setDimensions(surfaceView.width, surfaceView.height)
+        //viewModel.registerViewModelObserver(surfaceView)
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
-
+        //viewModel.joinThreads()
+        //viewModel.unregisterViewModelObserver()
     }
 }

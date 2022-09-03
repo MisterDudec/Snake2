@@ -1,33 +1,27 @@
 package com.example.domain.models
 
 import android.graphics.Rect
-import android.util.Log
 import com.example.domain.config.*
 import com.example.domain.config.Direction.*
 
 import kotlin.random.Random
 
-class GameModel {
-
-    private val logTag = "GameFieldData"
-
+class Field {
     private val _snake = ArrayList<Snake>()
     val snake get() = _snake.toList()
 
     private val _apples = ArrayList<Apple>()
     val apples get() = _apples.toList()
 
+    private val _counter = Counter()
+    val counter get() = _counter
+
     private var _width: Int? = null
-    private var _height: Int? = null
     val width get() = _width!!
+    private var _height: Int? = null
     val height get() = _height!!
+
     private var isModelInitialized = false
-
-    var appleCounter = 0
-    var liveCounter: Float = 1f
-
-    private var _gameOver = false
-    val gameOver get() = _gameOver
 
     fun setDimensions(width: Int, height: Int) {
         _width = width
@@ -56,11 +50,9 @@ class GameModel {
     }
 
     fun restartGame() {
-        _gameOver = false
         _snake.removeAll(snake.toSet())
         _apples.removeAll(apples.toSet())
-        appleCounter = 0
-        liveCounter = 1f
+        _counter.restartGame()
         initialize()
     }
 
@@ -137,37 +129,14 @@ class GameModel {
                 addApple()
             }
         }
-        appleCounter++
-        liveCounter += 0.25f
+        _counter.appleEaten()
     }
 
     fun snakeEaten(s: Int) : Boolean {
         for(i in snake.size - 1 downTo s){
             _snake.removeAt(i)
-            liveCounter--
+            _counter.snakeEaten()
         }
-        return liveCounter < 0
+        return _counter.isDead()
     }
-
-    fun gameOver() {
-        _gameOver = true
-    }
-
-    private fun printLogs(t: Int, r: Int, b: Int, l: Int) {
-        Log.d("$logTag/apple", "t = $t")
-        Log.d("$logTag/apple", "r = $r")
-        Log.d("$logTag/apple", "b = $b")
-        Log.d("$logTag/apple", "l = $l")
-    }
-
-    private fun printLogsXY(y: Int, x: Int) {
-        Log.d("$logTag/apple", "y = $y")
-        Log.d("$logTag/apple", "x = $x")
-        Log.d("$logTag/apple", "")
-    }
-
-    /*fun calculateWidth(canvas: Canvas) {
-        height *= if (canvas.height > canvas.width) canvas.height / canvas.width
-                else canvas.width / canvas.height
-    }*/
 }

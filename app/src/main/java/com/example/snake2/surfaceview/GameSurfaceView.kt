@@ -1,17 +1,17 @@
 package com.example.snake2.surfaceview
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.SurfaceView
 import com.example.domain.config.Direction
 import com.example.domain.config.GLOW
 import com.example.domain.config.SNAKE_SIZE_DEFAULT
-import com.example.domain.models.GameModel
+import com.example.domain.models.Field
 import com.example.domain.models.Snake
 import com.example.snake2.R
 import com.example.snake2.activity.ViewModelObserver
+import java.lang.NullPointerException
 
 
 class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
@@ -55,18 +55,22 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
         paintAppleBlur.color = appleColor
     }
 
-    override fun draw(gameModel: GameModel) {
+    override fun draw(gameModel: Field) {
         drawFrame(gameModel)
     }
 
-    fun drawFrame(gameModel: GameModel) {
+    fun drawFrame(gameModel: Field) {
         //Log.d("threads", "drawFrame: ${Looper.myLooper()}")
-        val canvas: Canvas = holder.lockCanvas()
-        drawFrame(canvas, gameModel)
-        holder.unlockCanvasAndPost(canvas)
+        try {
+            val canvas: Canvas = holder.lockCanvas()
+            drawFrame(canvas, gameModel)
+            holder.unlockCanvasAndPost(canvas)
+        } catch (e: NullPointerException) {
+            e.printStackTrace()
+        }
     }
 
-    private fun drawFrame(canvas: Canvas, gameModel: GameModel) {
+    private fun drawFrame(canvas: Canvas, gameModel: Field) {
         canvas.drawColor(backgroundColor)
             //canvas.drawColor(Color.BLACK)
 

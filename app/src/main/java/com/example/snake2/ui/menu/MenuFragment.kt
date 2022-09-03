@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.example.snake2.databinding.FragmentMenuBinding
 import androidx.navigation.fragment.findNavController
 import com.example.snake2.R
+import kotlinx.coroutines.launch
 
 class MenuFragment : Fragment() {
 
@@ -21,20 +23,26 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.buttonStartGame.setOnClickListener {
-            with (findNavController()) {
-                if (currentDestination == findDestination(R.id.MenuFragment))
-                    navigate(R.id.action_MenuFragment_to_GameFragment)
+            lifecycleScope.launch {
+                with (findNavController()) {
+                    if (currentDestination == findDestination(R.id.MenuFragment))
+                        navigate(R.id.action_MenuFragment_to_GameFragment)
+                }
             }
+
         }
 
         binding.buttonSettings.setOnClickListener {
-            with (findNavController()) {
-                if (currentDestination == findDestination(R.id.MenuFragment))
-                    navigate(R.id.action_MenuFragment_to_PreferenceContainerFragment)
+            lifecycleScope.launch {
+                with (findNavController()) {
+                    if (currentDestination == findDestination(R.id.MenuFragment))
+                        navigate(R.id.action_MenuFragment_to_PreferenceContainerFragment)
+                }
             }
         }
 
         super.onViewCreated(view, savedInstanceState)
     }
+
 
 }

@@ -24,6 +24,8 @@
     <color name="snake">#00FF00</color>
     <color name="apple">@color/red_a700_light</color>
 
+    <color name="direction_button">#1A1C19</color>
+
     <color name="purple_500a">#5E00E4</color>
     <color name="grey">#EBEBEB</color>
 

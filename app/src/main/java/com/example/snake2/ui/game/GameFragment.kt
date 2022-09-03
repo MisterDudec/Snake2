@@ -6,16 +6,13 @@ import android.os.Looper
 import android.util.Log
 import android.view.*
 import android.view.animation.AnimationUtils
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.get
-import com.example.domain.config.*
-import com.example.domain.gamestate.GameState
+import com.example.domain.config.Direction
 import com.example.domain.gamestate.GameStateController
-import com.example.domain.gamestate.GameStateController.gameState
 import com.example.domain.gamestate.GameStateControllerObserver
 import com.example.snake2.R
 import com.example.snake2.activity.GameViewModel
@@ -29,19 +26,6 @@ class GameFragment : Fragment(), GameStateControllerObserver {
     private val binding get() = _binding!!
 
     private val viewModel: GameViewModel by activityViewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                when (gameState) {
-                    GameState.Play -> GameStateController.pauseGame()
-                    GameState.Pause -> activity?.onBackPressed()
-                    GameState.GameOver -> activity?.onBackPressed()
-                }
-            }
-        })
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentGameBinding.inflate(inflater, container, false)
@@ -79,6 +63,8 @@ class GameFragment : Fragment(), GameStateControllerObserver {
     }
 
     private fun View.directionButtonSetOnTouchListener(direction: Direction) {
+        //animation = Animation(context, attrib)
+        //AnimationUtils.makeInAnimation(view.context, false)
         setOnTouchListener(object : View.OnTouchListener {
             override fun onTouch(view: View?, event: MotionEvent?): Boolean {
                 when (event?.action) {

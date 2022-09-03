@@ -1,8 +1,5 @@
 package com.example.snake2.activity
 
-import android.app.GameManager
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -11,9 +8,11 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
-import com.example.domain.config.*
+import com.example.domain.config.GLOW
+import com.example.domain.config.GLOW_DEFAULT
+import com.example.domain.config.START_SNAKE_LENGTH
+import com.example.domain.config.START_SNAKE_LENGTH_DEFAULT
 import com.example.snake2.R
 import com.example.snake2.databinding.ActivityMainBinding
 import com.example.snake2.surfaceview.SurfaceHolderCallback

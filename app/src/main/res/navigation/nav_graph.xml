@@ -20,11 +20,7 @@
 
         <action
             android:id="@+id/action_MenuFragment_to_PreferenceContainerFragment"
-            app:destination="@id/PreferenceContainerFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"  />
+            app:destination="@id/PreferenceContainerFragment"  />
     </fragment>
 
     <fragment
@@ -65,20 +61,13 @@
 
         <action
             android:id="@+id/action_GameOverFragment_to_PreferenceContainerFragment"
-            app:destination="@id/PreferenceContainerFragment"
-
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+            app:destination="@id/PreferenceContainerFragment" />
     </fragment>
 
     <dialog
         android:id="@+id/PreferenceContainerFragment"
         android:name="com.example.snake2.ui.preference.PreferenceContainerFragment"
-        tools:layout="@layout/fragment_preferences">
-
-    </dialog>
+        tools:layout="@layout/fragment_preferences"/>
 
 
     <!--<fragment

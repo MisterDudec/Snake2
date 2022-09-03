@@ -12,6 +12,8 @@
     <color name="snake">#00ff00</color>
     <color name="apple">#ff0d00</color>
 
+    <color name="direction_button">#FBFCF6</color>
+
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

@@ -1,5 +1,6 @@
 package com.example.snake2.activity
 
+import android.app.GameManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -18,14 +19,11 @@ import com.example.snake2.databinding.ActivityMainBinding
 import com.example.snake2.surfaceview.SurfaceHolderCallback
 
 class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
-    private lateinit var appBarConfiguration: AppBarConfiguration
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: GameViewModel by viewModels()
-
-    private val APP_PREFERENCES = "root_preferences"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -40,8 +38,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
         setPreferences()
 
-        val surfaceHolderCallback = SurfaceHolderCallback(viewModel, binding.surfaceView, this)
-        binding.surfaceView.holder.addCallback(surfaceHolderCallback)
+        binding.surfaceView.holder.addCallback(
+            SurfaceHolderCallback(viewModel, binding.surfaceView, this)
+        )
     }
 
     private fun setPreferences() {

@@ -22,7 +22,7 @@
     <string name="game_over">Game Over</string>
 
     <!-- Preference Headers -->
-    <string name="sync_header">Sync</string>
+    <string name="graphics_header">Graphics</string>
 
     <!-- Preferences Titles -->
     <string name="glow_title">Glow</string>

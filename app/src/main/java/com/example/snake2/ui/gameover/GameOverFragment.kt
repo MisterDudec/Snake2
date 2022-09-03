@@ -37,7 +37,7 @@ class GameOverFragment : Fragment() {
         }
 
         binding.buttonSettings.setOnClickListener {
-            findNavController().navigate(R.id.action_GameOverFragment_to_SettingsDialogFragment)
+            findNavController().navigate(R.id.action_GameOverFragment_to_PreferenceContainerFragment)
         }
 
         super.onViewCreated(view, savedInstanceState)

@@ -11,25 +11,10 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
-
-        <item name="preferenceTheme">@style/YourTheme.PreferenceThemeOverlay</item>
-        <item name="preferenceFragmentCompatStyle">@style/YourTheme.PreferenceThemeOverlay</item>
     </style>
 
-
-    <style name="YourTheme.PreferenceThemeOverlay" parent="@style/PreferenceThemeOverlay">
-        <item name="android:layout">@layout/fragment_preference</item>
-        <item name="android:layout_width">100dp</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_gravity">center</item>
-    </style>
-
-
-
-    <style name="FullScreenDialogStyle" parent="AppTheme">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowIsFloating">false</item>
+    <style name="preferenceContainer">
+        <item name="android:windowBackground">@color/layout_buttons_background</item>
     </style>
 
     <style name="imageButtons">

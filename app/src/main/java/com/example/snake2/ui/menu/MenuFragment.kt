@@ -21,15 +21,20 @@ class MenuFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.buttonStartGame.setOnClickListener {
-            findNavController().navigate(R.id.action_MenuFragment_to_GameFragment)
+            with (findNavController()) {
+                if (currentDestination == findDestination(R.id.MenuFragment))
+                    navigate(R.id.action_MenuFragment_to_GameFragment)
+            }
         }
 
         binding.buttonSettings.setOnClickListener {
-            findNavController().navigate(R.id.action_MenuFragment_to_SettingsDialogFragment)
+            with (findNavController()) {
+                if (currentDestination == findDestination(R.id.MenuFragment))
+                    navigate(R.id.action_MenuFragment_to_PreferenceContainerFragment)
+            }
         }
 
         super.onViewCreated(view, savedInstanceState)
     }
-
 
 }

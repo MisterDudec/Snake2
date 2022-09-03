@@ -3,16 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    tools:context=".ui.SettingsDialogFragment">
+    >
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/preference_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="@color/answer_text"
-        android:textSize="32sp"
-        android:gravity="center"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

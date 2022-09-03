@@ -37,11 +37,11 @@ class GameModel {
 
     private fun initialize() {
         val startLeft = width / 2
-        val startTop = height / 2 + SNAKE_SIZE * 10
+        val startTop = height / 2 + SNAKE_SIZE_DEFAULT * 10
 
         _snake.add(
             Snake(
-                Rect(startLeft, startTop, startLeft + SNAKE_SIZE, startTop + SNAKE_SIZE),
+                Rect(startLeft, startTop, startLeft + SNAKE_SIZE_DEFAULT, startTop + SNAKE_SIZE_DEFAULT),
                 DEFAULT_DIRECTION,
                 0
             )
@@ -49,7 +49,7 @@ class GameModel {
         repeat(START_SNAKE_LENGTH - 1) {
             growSnake()
         }
-        repeat(START_APPLES_SIZE) {
+        repeat(START_APPLES_SIZE_DEFAULT) {
             addApple()
         }
         isModelInitialized = true
@@ -73,12 +73,12 @@ class GameModel {
                         left,
                         bottom,
                         right,
-                        bottom + SNAKE_SIZE
+                        bottom + SNAKE_SIZE_DEFAULT
                     )
                 }
                 Right -> with (rect) {
                     rectangle = Rect(
-                        left - SNAKE_SIZE,
+                        left - SNAKE_SIZE_DEFAULT,
                         top,
                         left,
                         bottom
@@ -87,7 +87,7 @@ class GameModel {
                 Bottom -> with (rect) {
                     rectangle = Rect(
                         left,
-                        top - SNAKE_SIZE,
+                        top - SNAKE_SIZE_DEFAULT,
                         right,
                         top
                     )
@@ -96,7 +96,7 @@ class GameModel {
                     rectangle = Rect(
                         right,
                         top,
-                        right + SNAKE_SIZE,
+                        right + SNAKE_SIZE_DEFAULT,
                         bottom
                     )
                 }
@@ -111,8 +111,8 @@ class GameModel {
         var ok: Boolean
 
         while (true) {
-            x = Random.nextInt(0, width - APPLE_SIZE)
-            y = Random.nextInt(0, height - APPLE_SIZE)
+            x = Random.nextInt(0, width - APPLE_SIZE_DEFAULT)
+            y = Random.nextInt(0, height - APPLE_SIZE_DEFAULT)
             ok = true
             /*for (s in snake) {
                 synchronized(s) {
@@ -126,14 +126,14 @@ class GameModel {
             if (ok) break
         }
 
-        _apples.add(Apple(Rect(x, y, x + APPLE_SIZE, y + APPLE_SIZE)))
+        _apples.add(Apple(Rect(x, y, x + APPLE_SIZE_DEFAULT, y + APPLE_SIZE_DEFAULT)))
     }
 
     fun appleEaten(apple: Apple) {
         _apples.remove(apple)
         growSnake()
         if (apples.size <= 1) {
-            repeat(START_APPLES_SIZE) {
+            repeat(START_APPLES_SIZE_DEFAULT) {
                 addApple()
             }
         }

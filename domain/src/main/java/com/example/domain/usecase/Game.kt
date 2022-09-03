@@ -45,9 +45,9 @@ class Game {
             Direction.Left -> moveLeft(last, model.width)
         }
         if (turning) {
-            turningProgress += SNAKE_STEP
+            turningProgress += SNAKE_STEP_DEFAULT
 
-            if (turningProgress >= SNAKE_SIZE + SNAKE_STEP) {
+            if (turningProgress >= SNAKE_SIZE_DEFAULT + SNAKE_STEP_DEFAULT) {
                 onChangedDirection()
                 if (index < model.snake.size - 1)
                     model.snake[index + 1].changeDirection(direction)

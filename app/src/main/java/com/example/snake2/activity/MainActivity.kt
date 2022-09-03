@@ -1,5 +1,7 @@
 package com.example.snake2.activity
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
@@ -9,17 +11,21 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.preference.PreferenceManager.getDefaultSharedPreferences
+import com.example.domain.config.*
 import com.example.snake2.R
 import com.example.snake2.databinding.ActivityMainBinding
 import com.example.snake2.surfaceview.SurfaceHolderCallback
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     private var _binding: ActivityMainBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: GameViewModel by viewModels()
+
+    private val APP_PREFERENCES = "root_preferences"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -38,8 +44,11 @@ class MainActivity : AppCompatActivity() {
         binding.surfaceView.holder.addCallback(surfaceHolderCallback)
     }
 
-    fun setPreferences() {
-        getSharedPreferences(getString(R.string.glow_key), 0)
+    private fun setPreferences() {
+        with (getDefaultSharedPreferences(this)) {
+            GLOW = getBoolean(getString(R.string.glow_key), GLOW_DEFAULT)
+            START_SNAKE_LENGTH = getInt(getString(R.string.snake_length_key), START_SNAKE_LENGTH_DEFAULT)
+        }
     }
 
     fun hideSystemBars() {
@@ -58,6 +67,18 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onSharedPreferenceChanged(preferences: SharedPreferences?, key: String?) {
+        //Log.d("$this", "changed, $key")
+        Log.d("onSharedPreferenceChanged", "changed, $key")
+        when (key) {
+            getString(R.string.glow_key) -> {
+                //Log.d("$this", "$key")
+                Log.d("onSharedPreferenceChanged", "$key")
+                GLOW = preferences?.getBoolean(key, false) == true
+            }
+        }
     }
 
     /*override fun onTouchEvent(event: MotionEvent): Boolean {

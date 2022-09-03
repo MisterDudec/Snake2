@@ -6,7 +6,8 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.SurfaceView
 import com.example.domain.config.Direction
-import com.example.domain.config.SNAKE_SIZE
+import com.example.domain.config.GLOW
+import com.example.domain.config.SNAKE_SIZE_DEFAULT
 import com.example.domain.models.GameModel
 import com.example.domain.models.Snake
 import com.example.snake2.R
@@ -28,8 +29,8 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     val path = Path()
 
-    private val preferences: SharedPreferences = context.getSharedPreferences("preferences", 0)
-    private val glow = preferences.getBoolean(context.getString(R.string.glow_key), false)
+//    private val preferences: SharedPreferences = context.getSharedPreferences("preferences", 0)
+//    private val glow = preferences.getBoolean(context.getString(R.string.glow_key), false)
 
     init {
         //paintSnake.isAntiAlias = true
@@ -70,10 +71,12 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
             //canvas.drawColor(Color.BLACK)
 
         for (apple in gameModel.apples){
-            canvas.drawRect(apple.rect, paintAppleBlur)
-            canvas.drawRect(apple.rect, paintAppleBlur)
-            canvas.drawRect(apple.rect, paintAppleBlur)
-            canvas.drawRect(apple.rect, paintAppleBlur)
+            if (GLOW) {
+                canvas.drawRect(apple.rect, paintAppleBlur)
+                canvas.drawRect(apple.rect, paintAppleBlur)
+                canvas.drawRect(apple.rect, paintAppleBlur)
+                canvas.drawRect(apple.rect, paintAppleBlur)
+            }
             canvas.drawRect(apple.rect, paintApple)
         }
 
@@ -84,13 +87,17 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
         //canvas.drawPath(path, paintSnakeBlur)
 
-        if (glow) path.reset()
-        for (s in gameModel.snake) {
-            if (glow) path.addRect(RectF(s.rect), Path.Direction.CW)
-            canvas.drawRect(s.rect, paintSnake)
+        if (GLOW) {
+            path.reset()
+            for (s in gameModel.snake) {
+                path.addRect(RectF(s.rect), Path.Direction.CW)
+                canvas.drawRect(s.rect, paintSnake)
+            }
+            canvas.drawPath(path, paintSnakeBlur)
+        } else {
+            for (s in gameModel.snake)
+                canvas.drawRect(s.rect, paintSnake)
         }
-
-        if (glow) canvas.drawPath(path, paintSnakeBlur)
 
 
         //path.
@@ -109,13 +116,13 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
             with (newRect) {
                 top = rect.top
                 bottom = rect.bottom
-                left = rect.left - SNAKE_SIZE / 2
-                right = rect.right + SNAKE_SIZE / 2
+                left = rect.left - SNAKE_SIZE_DEFAULT / 2
+                right = rect.right + SNAKE_SIZE_DEFAULT / 2
             }
         } else {
             with (newRect) {
-                top = rect.top - SNAKE_SIZE / 2
-                bottom = rect.bottom + SNAKE_SIZE / 2
+                top = rect.top - SNAKE_SIZE_DEFAULT / 2
+                bottom = rect.bottom + SNAKE_SIZE_DEFAULT / 2
                 left = rect.left
                 right = rect.right
             }

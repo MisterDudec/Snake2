@@ -5,14 +5,14 @@ import android.graphics.Paint
 import android.graphics.Rect
 import com.example.domain.config.Direction
 import com.example.domain.config.Direction.*
-import com.example.domain.config.SNAKE_SIZE
-import com.example.domain.config.SNAKE_STEP
+import com.example.domain.config.SNAKE_SIZE_DEFAULT
+import com.example.domain.config.SNAKE_STEP_DEFAULT
 import org.jetbrains.annotations.TestOnly
 
 data class Snake(override val rect: Rect, var direction: Direction, val index: Int) : Cell (rect) {
     private var transition = false
     var turning = false
-    var turningProgress = SNAKE_SIZE + SNAKE_STEP
+    var turningProgress = SNAKE_SIZE_DEFAULT + SNAKE_STEP_DEFAULT
     val paint = Paint()
 
     init {
@@ -31,12 +31,12 @@ data class Snake(override val rect: Rect, var direction: Direction, val index: I
     fun moveTop(last: Boolean, height: Int) {
         with (rect) {
             if (bottom >= 0) {
-                top -= SNAKE_STEP
-                if (!turning || last) bottom -= SNAKE_STEP
+                top -= SNAKE_STEP_DEFAULT
+                if (!turning || last) bottom -= SNAKE_STEP_DEFAULT
                 if (isTransition() && bottom <= height) completeTransition()
             } else {
                 top = height
-                bottom = height + SNAKE_SIZE
+                bottom = height + SNAKE_SIZE_DEFAULT
             }
             if (top <= 5) startTransition()
         }
@@ -45,12 +45,12 @@ data class Snake(override val rect: Rect, var direction: Direction, val index: I
     fun moveRight(last: Boolean, width: Int) {
         with (rect) {
             if (left <= width) {
-                right += SNAKE_STEP
-                if (!turning || last) left += SNAKE_STEP
+                right += SNAKE_STEP_DEFAULT
+                if (!turning || last) left += SNAKE_STEP_DEFAULT
                 if (isTransition() && left >= 0) completeTransition()
             } else {
                 startTransition()
-                left = 0 - SNAKE_SIZE
+                left = 0 - SNAKE_SIZE_DEFAULT
                 right = 0
             }
             if (right >= width - 5) startTransition()
@@ -60,11 +60,11 @@ data class Snake(override val rect: Rect, var direction: Direction, val index: I
     fun moveBottom(last: Boolean, height: Int) {
         with (rect) {
             if (top <= height) {
-                bottom += SNAKE_STEP
-                if (!turning || last) top += SNAKE_STEP
+                bottom += SNAKE_STEP_DEFAULT
+                if (!turning || last) top += SNAKE_STEP_DEFAULT
                 if (isTransition() && top >= 0) completeTransition()
             } else {
-                top = 0 - SNAKE_SIZE
+                top = 0 - SNAKE_SIZE_DEFAULT
                 bottom = 0
             }
             if (bottom >= height - 5) startTransition()
@@ -74,12 +74,12 @@ data class Snake(override val rect: Rect, var direction: Direction, val index: I
     fun moveLeft(last: Boolean, width: Int) {
         with (rect) {
             if (right >= 0) {
-                left -= SNAKE_STEP
-                if (!turning || last) right -= SNAKE_STEP
+                left -= SNAKE_STEP_DEFAULT
+                if (!turning || last) right -= SNAKE_STEP_DEFAULT
                 if (isTransition() && right <= width) completeTransition()
             } else {
                 left = width
-                right = width + SNAKE_SIZE
+                right = width + SNAKE_SIZE_DEFAULT
             }
             if (left <= 5) startTransition()
         }
@@ -94,10 +94,10 @@ data class Snake(override val rect: Rect, var direction: Direction, val index: I
     fun onChangedDirection() {
         turning = false
         when (direction) {
-            Top -> rect.bottom = rect.top + SNAKE_SIZE
-            Right -> rect.left = rect.right - SNAKE_SIZE
-            Bottom -> rect.top = rect.bottom - SNAKE_SIZE
-            Left -> rect.right = rect.left + SNAKE_SIZE
+            Top -> rect.bottom = rect.top + SNAKE_SIZE_DEFAULT
+            Right -> rect.left = rect.right - SNAKE_SIZE_DEFAULT
+            Bottom -> rect.top = rect.bottom - SNAKE_SIZE_DEFAULT
+            Left -> rect.right = rect.left + SNAKE_SIZE_DEFAULT
         }
     }
 

@@ -1,7 +1,7 @@
 package com.example.snake2.threads
 
 import android.os.SystemClock
-import com.example.domain.config.ADD_APPLE_PERIOD
+import com.example.domain.config.ADD_APPLE_PERIOD_DEFAULT
 import com.example.domain.gamestate.GameState
 import com.example.domain.gamestate.GameStateController
 import com.example.domain.usecase.Game
@@ -48,7 +48,7 @@ open class GameThread(private val game: Game, private val viewModel: GameViewMod
 
             //Log.v("$GameThread", "$getTickCount > $nextGameTick && $loops < $maxFrameSkip")
             while(getTickCount > nextGameTick && loops < maxFrameSkip) {
-                val timeToAddApple = counter / 300000000 > ADD_APPLE_PERIOD
+                val timeToAddApple = counter / 300000000 > ADD_APPLE_PERIOD_DEFAULT
                 if (timeToAddApple) counter = 0
 
                 //Log.d("$GameThread", "time = ${counter / 100000}, bool = $timeToAddApple")

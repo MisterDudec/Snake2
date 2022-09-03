@@ -1,12 +1,25 @@
 package com.example.domain.config
 
-const val START_SNAKE_LENGTH = 60
-const val START_APPLES_SIZE = 3
+const val START_SNAKE_LENGTH_DEFAULT = 60
+const val START_APPLES_SIZE_DEFAULT = 3
 
-const val ADD_APPLE_PERIOD = 15
+const val ADD_APPLE_PERIOD_DEFAULT = 15
 
-const val SNAKE_SIZE = 40
-const val APPLE_SIZE = 40
-const val SNAKE_STEP: Int = 10
+const val SNAKE_SIZE_DEFAULT = 40
+const val APPLE_SIZE_DEFAULT = 40
+const val SNAKE_STEP_DEFAULT: Int = 10
+
+const val GLOW_DEFAULT = false
 
 val DEFAULT_DIRECTION: Direction = Direction.Top
+
+var START_SNAKE_LENGTH = START_SNAKE_LENGTH_DEFAULT
+var START_APPLES_SIZE = 3
+
+var ADD_APPLE_PERIOD = 15
+
+var SNAKE_SIZE = 40
+var APPLE_SIZE = 40
+var SNAKE_STEP: Int = 10
+
+var GLOW = GLOW_DEFAULT

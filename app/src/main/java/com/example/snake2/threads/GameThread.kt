@@ -1,20 +1,11 @@
 package com.example.snake2.threads
 
-import android.os.SystemClock
-import android.util.Log
 import com.example.domain.config.ADD_APPLE_PERIOD_DEFAULT
 import com.example.domain.gamestate.GameState
 import com.example.domain.gamestate.GameStateController
-import com.example.domain.usecase.Game
 import com.example.snake2.activity.GameViewModel
 
-
-/**
- * Created by Sex_predator on 27.03.2016.
- */
 open class GameThread(private val viewModel: GameViewModel, name: String) : AbstractThread(name) {
-
-    private val getTickCount: Long get() = SystemClock.uptimeMillis()
 
     override fun run() { //var interpolation: Float
         var counter = 0

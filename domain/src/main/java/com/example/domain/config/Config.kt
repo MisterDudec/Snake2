@@ -1,13 +1,13 @@
 package com.example.domain.config
 
-const val START_SNAKE_LENGTH_DEFAULT = 60
+const val START_SNAKE_LENGTH_DEFAULT = 5
 const val START_APPLES_SIZE_DEFAULT = 3
 
 const val ADD_APPLE_PERIOD_DEFAULT = 15
 
-const val SNAKE_SIZE_DEFAULT = 40
+const val SNAKE_SIZE_DEFAULT = 30
 const val APPLE_SIZE_DEFAULT = 40
-const val SNAKE_STEP_DEFAULT: Int = 10
+const val SNAKE_STEP_DEFAULT: Int = 15
 
 const val GLOW_DEFAULT = false
 

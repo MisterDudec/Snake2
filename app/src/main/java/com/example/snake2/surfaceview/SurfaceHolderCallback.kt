@@ -20,7 +20,7 @@ class SurfaceHolderCallback(
 
         viewModel.liveData.observe(activity) {
             CoroutineScope(Dispatchers.Unconfined).launch {
-                surfaceView.drawFrame(it)
+                surfaceView.drawFrameRect(it)
             }
         }
 

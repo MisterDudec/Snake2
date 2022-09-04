@@ -1,12 +1,17 @@
 package com.example.snake2.threads
 
+import android.os.SystemClock
+
 abstract class AbstractThread(name: String) : Thread(name) {
     protected val maxFrameSkip = 5
-    protected var ticksPerSecond = TICKS_60
+    private var ticksPerSecond = TICKS_60
     protected var skipTicks = 1000 / ticksPerSecond
+
+    protected val getTickCount: Long get() = SystemClock.uptimeMillis()
 
     companion object {
         const val TICKS_10 = 10
+        const val TICKS_30 = 30
         const val TICKS_60 = 60
         const val TICKS_120 = 120
     }

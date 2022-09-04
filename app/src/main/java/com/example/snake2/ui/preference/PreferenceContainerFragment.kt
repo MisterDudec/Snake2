@@ -13,8 +13,6 @@ class PreferenceContainerFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isCancelable = true
-
-        //setStyle(STYLE_NORMAL, R.style.CustomDialog)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

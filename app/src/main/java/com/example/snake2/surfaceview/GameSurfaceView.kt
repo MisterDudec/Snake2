@@ -11,12 +11,11 @@ import com.example.domain.models.Field
 import com.example.domain.models.Snake
 import com.example.snake2.R
 import com.example.snake2.activity.ViewModelObserver
-import java.lang.NullPointerException
+
+class GameSurfaceView(context: Context, attrs: AttributeSet?) :
+    SurfaceView(context, attrs), ViewModelObserver {
 
 
-class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
-    SurfaceView(context, attrs, defStyle), ViewModelObserver {
-    //private val paint = Paint()
     private val backgroundColor = context.getColor(R.color.background_surface_view)
     private var snakeColor = context.getColor(R.color.snake)
     private var appleColor = context.getColor(R.color.apple)
@@ -29,89 +28,132 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
 
     val path = Path()
 
-//    private val preferences: SharedPreferences = context.getSharedPreferences("preferences", 0)
-//    private val glow = preferences.getBoolean(context.getString(R.string.glow_key), false)
-
     init {
-        //paintSnake.isAntiAlias = true
-        //paintSnake.isDither = true
         paintSnake.style = Paint.Style.FILL
         paintSnake.color = snakeColor
-        //paintSnake.setShadowLayer(50f, 0f, 0f, snakeColor)
-
-        //RadialGradient()
 
         paintSnakeBlur.set(paintSnake)
-        //paintSnakeBlur.setShadowLayer(30f, 0, 0,)
-        //paintSnakeBlur.style = Paint.Style.STROKE
-        //paintSnakeBlur.strokeWidth = 10f
         paintSnakeBlur.maskFilter = BlurMaskFilter(30f, BlurMaskFilter.Blur.SOLID)
 
         paintApple.set(paintSnake)
         paintApple.color = appleColor
-        //paintApple.setShadowLayer(50f, 0f, 0f, appleColor)
 
         paintAppleBlur.set(paintSnakeBlur)
         paintAppleBlur.color = appleColor
     }
 
     override fun draw(gameModel: Field) {
-        drawFrame(gameModel)
+        drawFrameRect(gameModel)
     }
 
-    fun drawFrame(gameModel: Field) {
-        //Log.d("threads", "drawFrame: ${Looper.myLooper()}")
+    fun drawFrameRect(gameModel: Field) {
+        var canvas: Canvas? = null
         try {
-            val canvas: Canvas = holder.lockCanvas()
-            drawFrame(canvas, gameModel)
-            holder.unlockCanvasAndPost(canvas)
+            canvas = holder.lockCanvas()
+            if (GLOW) drawFrameGlowPath(canvas, gameModel)
+            else drawFrameRect(canvas, gameModel)
         } catch (e: NullPointerException) {
             e.printStackTrace()
+        } finally {
+            if (canvas != null) holder.unlockCanvasAndPost(canvas)
         }
     }
 
-    private fun drawFrame(canvas: Canvas, gameModel: Field) {
+    private fun drawFrameRect(canvas: Canvas, gameModel: Field) {
         canvas.drawColor(backgroundColor)
-            //canvas.drawColor(Color.BLACK)
+
+        for (apple in gameModel.apples)
+            canvas.drawRect(apple.rect, paintApple)
+
+        for (s in gameModel.snake)
+            canvas.drawRect(s.rect, paintSnake)
+    }
+
+    private fun drawFramePath(canvas: Canvas, gameModel: Field) {
+        canvas.drawColor(backgroundColor)
+
+        for (apple in gameModel.apples)
+            canvas.drawRect(apple.rect, paintApple)
+
+        path.reset()
+        for (s in gameModel.snake)
+            path.addRect(RectF(s.rect), Path.Direction.CW)
+
+        canvas.drawPath(path, paintSnake)
+    }
+
+    private fun drawFrameGlowPath(canvas: Canvas, gameModel: Field) {
+        canvas.drawColor(backgroundColor)
 
         for (apple in gameModel.apples){
-            if (GLOW) {
-                canvas.drawRect(apple.rect, paintAppleBlur)
-                canvas.drawRect(apple.rect, paintAppleBlur)
-                canvas.drawRect(apple.rect, paintAppleBlur)
+            repeat(4) {
                 canvas.drawRect(apple.rect, paintAppleBlur)
             }
+
+            //canvas.drawRect(apple.rect, paintApple)
+        }
+
+        path.reset()
+        for (s in gameModel.snake) {
+            path.addRect(RectF(s.rect), Path.Direction.CW)
+            //canvas.drawRect(s.rect, paintSnake)
+        }
+        canvas.drawPath(path, paintSnakeBlur)
+        //canvas.drawPath(path, paintSnake)
+    }
+
+    private fun drawFrameGlowRect(canvas: Canvas, gameModel: Field) {
+        canvas.drawColor(backgroundColor)
+
+        for (apple in gameModel.apples){
+            repeat(4) {
+                canvas.drawRect(apple.rect, paintAppleBlur)
+            }
+
             canvas.drawRect(apple.rect, paintApple)
         }
 
-        /*try {
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }*/ //IndexOutOfBoundsException, ConcurrentModificationException //TODO resolve ConcurrentModificationException
-
-        //canvas.drawPath(path, paintSnakeBlur)
-
-        if (GLOW) {
+        for (s in gameModel.snake) {
+            canvas.drawRect(s.rect, paintSnakeBlur)
+        }
+        /*for (s in gameModel.snake) {
+            canvas.drawRect(s.rect, paintSnake)
+        }*/
+        /*
             path.reset()
             for (s in gameModel.snake) {
                 path.addRect(RectF(s.rect), Path.Direction.CW)
                 canvas.drawRect(s.rect, paintSnake)
             }
             canvas.drawPath(path, paintSnakeBlur)
-        } else {
-            for (s in gameModel.snake)
-                canvas.drawRect(s.rect, paintSnake)
+         */
+    }
+
+    private fun drawFrameLightning(canvas: Canvas, gameModel: Field) {
+        canvas.drawColor(backgroundColor)
+
+        for (apple in gameModel.apples){
+            repeat(4) {
+                canvas.drawRect(apple.rect, paintAppleBlur)
+            }
+
+            canvas.drawRect(apple.rect, paintApple)
         }
 
-
-        //path.
-        //canvas.drawPath(path, paintSnake)
-        //path.
-
-        /*try {
-        } catch (e: ConcurrentModificationException) {
-            e.printStackTrace()
-        }*/
+        for (s in gameModel.snake) {
+            canvas.drawRect(s.rect, paintSnakeBlur)
+        }
+        for (s in gameModel.snake) {
+            canvas.drawRect(s.rect, paintSnake)
+        }
+        /*
+            path.reset()
+            for (s in gameModel.snake) {
+                path.addRect(RectF(s.rect), Path.Direction.CW)
+                canvas.drawRect(s.rect, paintSnake)
+            }
+            canvas.drawPath(path, paintSnakeBlur)
+         */
     }
 
     private fun Snake.blur() : Rect {
@@ -137,22 +179,4 @@ class GameSurfaceView(context: Context, attrs: AttributeSet?, defStyle: Int) :
     private fun Rect.copy() : Rect {
         return Rect(left, top, right, bottom)
     }
-
-    constructor(context: Context) : this(context, null, 0)
-
-    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-
-    //private val gestureListener = GestureDetectorCompat(this.context, MyGestureListener())
-
-    /* override fun onTouchEvent(event: MotionEvent?): Boolean {
-         gestureListener.onTouchEvent(event)
-         performClick()
-         return super.onTouchEvent(event)
-     }
-
-     override fun performClick(): Boolean {
-         super.performClick()
-         //doSomething()
-         return true
-     }*/
 }
